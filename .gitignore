@@ -1,5 +1,6 @@
 download_cache
 trips.db
+*.env
 
 ## github template:
 
