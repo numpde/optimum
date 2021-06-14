@@ -8,13 +8,7 @@ VERSION = "v1"
 
 import tensorflow as tf
 
-import contextlib
-
-import matplotlib.pyplot as plt
 import percache
-
-from more_itertools import pairwise
-from tensorflow.python.data import AUTOTUNE
 
 from twig import log
 import logging
@@ -27,13 +21,9 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
-from plox import Plox
 from tcga.utils import unlist1, relpath, mkdir, first, Now
-from inclusive import range
 
-from opt_maps import maps
 from opt_utils.graph import largest_component, GraphNearestNode, GraphPathDist
-from opt_utils.style import default_style, name2color, name2cmap, get_velocity_cmap
 from opt_utils.misc import Section
 
 from opt_tf import FunctionalLogger, ConditionalAbort
@@ -115,7 +105,7 @@ def make_model():
 
 def main():
     ds_train = make_ds(n=10000)
-    ds_valid = make_ds(n=1000)
+    ds_valid = make_ds(n=1000)  # avoid using the same n
     log.debug(f"first of training dataset: \n{list(ds_train.take(1))}")
     log.debug(f"first of validation dataset: \n{list(ds_valid.take(1))}")
 
@@ -137,7 +127,7 @@ def main():
             tf.keras.callbacks.TensorBoard(log_dir, histogram_freq=1),
             tf.keras.callbacks.ModelCheckpoint(log_dir / "model.tf", save_best_only=True, monitor='val_loss'),
         ],
-        validation_data=ds_valid.batch(2 ** 10)
+        validation_data=ds_valid.batch(2 ** 10),
     )
 
 

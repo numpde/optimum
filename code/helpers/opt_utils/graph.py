@@ -177,7 +177,7 @@ class ApproxGeodistance:
         N = [self.node_loc.sample(2, replace=True).to_numpy() for __ in range[111]]
         rel_acc = max(((self.loc_dist_acc(*pq) - self.loc_dist_est(*pq)) / (self.loc_dist_acc(*pq) or 1)) for pq in N)
         if (rel_acc > 1e-2):
-            raise RuntimeWarning(F"Weak relative accuracy (~{rel_acc}) in {type(self)}")
+            raise RuntimeWarning(F"Weak relative accuracy (~{rel_acc}) in {type(self)}.")
 
         # Convert to dictionary for easier access
         self.node_loc = dict(zip(self.node_loc.index, self.node_loc.to_numpy()))
