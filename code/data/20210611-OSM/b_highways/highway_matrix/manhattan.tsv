@@ -1,0 +1,27 @@
+highway	drivable	cyclable	walkable
+secondary	True		
+residential	True		
+tertiary_link	True		
+service	True		
+motorway_link	True		
+footway			True
+steps			True
+motorway	True		
+trunk_link	True		
+trunk	True		
+pedestrian			True
+cycleway		True	
+tertiary	True		
+primary	True		
+unclassified	True		
+primary_link	True		
+secondary_link	True		
+track			
+path			True
+living_street	True		True
+bridleway			
+elevator			True
+platform			True
+construction			
+corridor			True
+proposed			

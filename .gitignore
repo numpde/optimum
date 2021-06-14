@@ -1,6 +1,7 @@
 download_cache
 trips.db
 *.env
+percache.*
 
 ## github template:
 
