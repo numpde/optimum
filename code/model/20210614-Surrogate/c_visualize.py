@@ -25,9 +25,10 @@ from b_train import make_df, load_graph, AREA, BASE, DATA, EDGE_WEIGHT_KEY
 
 out_dir = mkdir(Path(__file__).with_suffix(''))
 
+path_to_model = max(BASE.glob(f"**/v*/{EDGE_WEIGHT_KEY}/**/model.tf"))
+
 
 def load_model():
-    path_to_model = max(BASE.glob("**/v*/history/*/model.tf"))
     log.info(f"Loading model from: {relpath(path_to_model)}")
 
     model = tf.keras.models.load_model(path_to_model)
@@ -91,6 +92,8 @@ def estimated_vs_reference(df: pd.DataFrame):
 def visualize_model(model):
     with (out_dir / f"{whatsmyname()}.txt").open(mode='w') as fd:
         with contextlib.redirect_stdout(fd):
+            print(f"path_to_model: {relpath(path_to_model)}")
+            print(f"")
             model.summary()
 
     tf.keras.utils.plot_model(
@@ -106,12 +109,12 @@ def visualize_model(model):
 
 def main():
     model = load_model()
+    visualize_model(model)
 
     df = make_df(1000, seed=1000)
     df = df.assign(p=model.predict(df.drop(columns='y')))
 
     outlier_trajectories(df)
-    visualize_model(model)
     estimated_vs_reference(df)
 
 

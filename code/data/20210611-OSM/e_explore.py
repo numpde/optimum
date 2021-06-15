@@ -204,7 +204,7 @@ def trip_trajectories_ingraph(data) -> Plox:
 
 
 @contextlib.contextmanager
-def trip_trajectories_velocity(data) -> Plox:
+def trip_trajectories_velocity_naive(data, edge_weight='len') -> Plox:
     trips: pd.DataFrame = data.trips
     graph: nx.DiGraph = data.graph
 
@@ -223,7 +223,7 @@ def trip_trajectories_velocity(data) -> Plox:
         log.debug(f"{len(trips)} trips.")
 
     with Section("Computing estimated trajectories", out=log.debug):
-        trips['traj'] = list(parallel_map(GraphPathDist(graph).path_only, zip(trips.ia, trips.ib)))
+        trips['traj'] = list(parallel_map(GraphPathDist(graph, edge_weight=edge_weight).path_only, zip(trips.ia, trips.ib)))
 
     with Section("Getting the background OSM map", out=log.debug):
         extent = maps.ax4(nodes.lat, nodes.lon)
@@ -349,7 +349,7 @@ def main(area):
         data = get_trips_mit_alles(area, table_name)
 
         ff = [
-            trip_trajectories_velocity,
+            trip_trajectories_velocity_naive,
             compare_multiple_trajectories,
             trip_trajectories_ingraph,
             trip_distance_vs_shortest,

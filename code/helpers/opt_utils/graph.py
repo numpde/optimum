@@ -223,10 +223,10 @@ class GraphPathDist(ContextManager):
         self.graph = nx.convert_node_labels_to_integers(graph)
         self.edge_weight = edge_weight
         self.lens = nx.get_edge_attributes(self.graph, name=edge_weight)
-        self.geodist = ApproxGeodistance(self.graph)
+        self.approx_geodist = ApproxGeodistance(self.graph)
 
     def astar_heuristic(self, u, v):
-        return 2 * self.geodist.node_dist_est(u, v)
+        return 2 * self.approx_geodist.node_dist_est(u, v)
 
     def length_of(self, path):
         return sum(self.lens[e] for e in pairwise(path))
@@ -243,9 +243,11 @@ class GraphPathDist(ContextManager):
             heuristic=self.astar_heuristic,
             weight=self.edge_weight
         )
-        dist = self.length_of(path)
 
-        path = tuple(self.i2n[n] for n in path)
+        # Respect the order:
+        dist = self.length_of(path)
+        path = tuple(self.i2n[i] for i in path)
+
         return (path, dist)
 
     def path_only(self, uv):

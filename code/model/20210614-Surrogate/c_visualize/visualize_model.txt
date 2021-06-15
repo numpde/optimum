@@ -1,3 +1,5 @@
+path_to_model: b_train/v1/len/history/UTC-20210614-200229-keep/model.tf
+
 Model: "sequential"
 _________________________________________________________________
 Layer (type)                 Output Shape              Param #   

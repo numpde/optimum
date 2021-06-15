@@ -1,7 +1,7 @@
 # RA, 2021-06-14
 
 """
-Train a surrogate model for transition times.
+Train a surrogate model for transition times from the graph only.
 """
 
 VERSION = "v1"
@@ -37,7 +37,7 @@ cache = percache.Cache(str(mkdir(Path(__file__).parent / "cache") / "percache.da
 cache.clear(maxage=(60 * 60 * 24))
 
 timestamp = Now()
-out_dir = mkdir((Path(__file__).with_suffix('') / VERSION).resolve())
+out_dir = mkdir(((Path(__file__).with_suffix('') / VERSION) / EDGE_WEIGHT_KEY).resolve())
 
 
 def load_graph(area: str):

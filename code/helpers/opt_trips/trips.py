@@ -56,7 +56,7 @@ def get_road_graph(area):
     return g
 
 
-def get_trips(table_name, where="", order="random()", limit=11111) -> pd.DataFrame:
+def get_raw_trips(table_name, where="", order="random()", limit=11111) -> pd.DataFrame:
     with Section("Querying trips", out=log.debug):
         sql = " ".join([
             f"SELECT * FROM [{table_name}]",
@@ -65,7 +65,10 @@ def get_trips(table_name, where="", order="random()", limit=11111) -> pd.DataFra
             f"LIMIT    ({limit}) " if limit else "",
         ])
 
-        return query_trips(sql)
+        df = query_trips(sql)
+        df = df.rename(columns={'passenger_count': "n"})
+
+        return df
 
 
 def with_nearest_ingraph(trips, graph):
@@ -90,11 +93,11 @@ def with_nearest_ingraph(trips, graph):
         return trips
 
 
-def with_shortest_distance(trips, graph):
+def with_shortest_distance(trips, graph, edge_weight="len"):
     with Section("Computing shortest distances", out=log.debug):
         return trips.join(
             pd.DataFrame(
-                data=parallel_map(GraphPathDist(graph, edge_weight="len"), zip(trips.ia, trips.ib)),
+                data=parallel_map(GraphPathDist(graph, edge_weight=edge_weight), zip(trips.ia, trips.ib)),
                 index=trips.index,
                 columns=['path', 'shortest'],
             )
@@ -104,11 +107,9 @@ def with_shortest_distance(trips, graph):
 @cache
 def get_trips_mit_alles(area: str, table_names: List[str], keep_cols=tuple(KEEP_COLS), **kwargs):
     trips = pd.concat(axis=0, objs=[
-        get_trips(table_name, **kwargs).assign(table_name=table_name)
+        get_raw_trips(table_name, **kwargs).assign(table_name=table_name)
         for table_name in sorted(table_names)
     ])
-
-    trips = trips.rename(columns={'passenger_count': "n"})
 
     trips = trips[list(keep_cols)]
 

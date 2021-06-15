@@ -1,0 +1,236 @@
+[D][20210615 15:28:27 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<load_graph: Loading graph>
+[I][20210615 15:28:27 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][load_graph:68]
+graph file: ../../data/20210611-OSM/c_road_graph/manhattan.pkl
+[I][20210615 15:28:27 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][load_graph:78]
+Imputing edge time-to-transition.
+[D][20210615 15:28:28 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<get_raw_trips: Querying trips>
+[D][20210615 15:28:29 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<get_raw_trips: Querying trips>
+[D][20210615 15:28:32 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][get_trips:95]
+Trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|
+| 1281 | 2016-05-01 18:00:01 | 2016-05-01 18:05:33 | -73.9513 |  40.7998 | -73.9515 |  40.8097 |   1 |   1512.78  |        332 | green_tripdata_2016-05  |
+| 6743 | 2016-05-01 18:00:02 | 2016-05-01 18:10:51 | -74.0016 |  40.7462 | -73.9799 |  40.7334 |   1 |   2703.69  |        649 | yellow_tripdata_2016-05 |
+| 3540 | 2016-05-01 18:00:07 | 2016-05-01 18:04:27 | -73.9671 |  40.7528 | -73.9742 |  40.751  |   1 |    965.604 |        260 | yellow_tripdata_2016-05 |
+...
+[D][20210615 15:28:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210615 15:28:36 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:91]
+Keep 19378, drop 2844.
+[D][20210615 15:28:36 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `len`>
+[I][20210615 15:29:32 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train:183]
+Number of trips for training: 19613.
+[D][20210615 15:29:32 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train:184]
+E.g.: 
+                   ta                  tb  ...          len   anomaly
+0 2016-05-12 18:01:56 2016-05-12 18:14:11  ...  2289.992385  1.016385
+0 2016-05-13 18:14:15 2016-05-13 18:27:58  ...  3577.931239  1.034531
+1 2016-05-06 18:41:13 2016-05-06 18:51:40  ...  2302.690655  1.092236
+
+[3 rows x 15 columns]
+[I][20210615 15:29:32 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train:187]
+log_dir = b_train/v1/lag/UTC-20210615-132827/train
+[D][20210615 15:29:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:30:23 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.15644845786171924.
+[D][20210615 15:30:27 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:30:27 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:30:27 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:30:27 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:30:27 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 45
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'tRNS' 98 14
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'pHYs' 124 9
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 145 49
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 45
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'tRNS' 98 14
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'pHYs' 124 9
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 145 52
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 33
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'tRNS' 86 10
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'pHYs' 108 9
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 129 45
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 45
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'tRNS' 98 14
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'pHYs' 124 9
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 145 50
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 48
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'tRNS' 101 15
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'pHYs' 128 9
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 149 48
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 48
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'tRNS' 101 15
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'pHYs' 128 9
+[D][20210615 15:30:44 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 149 434
+[D][20210615 15:30:45 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:31:35 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.17034622597106938.
+[D][20210615 15:31:39 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:31:39 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:31:39 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:31:39 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:31:39 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:31:58 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:32:49 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.18099824901702943.
+[D][20210615 15:32:53 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:32:53 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:32:53 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:32:53 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:32:53 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:33:12 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:34:03 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.1829518747521062.
+[D][20210615 15:34:07 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:34:07 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:34:07 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:34:07 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:34:07 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:34:25 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:35:15 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.1852116468286691.
+[D][20210615 15:35:19 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:35:19 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:35:19 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:35:19 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:35:19 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:35:37 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:36:28 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.18521981488752204.
+[D][20210615 15:36:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:36:32 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:36:32 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:36:32 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:36:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:36:49 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:37:39 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.19054221684368539.
+[D][20210615 15:37:43 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:37:43 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:37:43 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:37:43 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:37:43 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:38:02 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:38:55 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.1982355742637171.
+[D][20210615 15:38:59 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:38:59 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:38:59 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:38:59 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:38:59 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:39:18 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:40:10 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.19059990902605164.
+[D][20210615 15:40:14 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:40:14 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:40:14 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:40:14 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:40:14 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
+[D][20210615 15:40:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<with_ingraph_trajectories: Computing in-graph trajectories for `lag`>
+[I][20210615 15:41:23 CEST][/home/ra/repos/optimum/code/model/20210613-Permittivity/b_train.py][MainThread][MainProcess][train_iteration:165]
+Correlation of reported vs estimated duration: 0.19316020910618484.
+[D][20210615 15:41:28 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Getting the background OSM map>
+[D][20210615 15:41:28 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IHDR' 16 13
+[D][20210615 15:41:28 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'PLTE' 41 384
+[D][20210615 15:41:28 CEST][/home/ra/repos/optimum/venv/lib/python3.8/site-packages/PIL/PngImagePlugin.py][MainThread][MainProcess][call:186]
+STREAM b'IDAT' 437 32768
+[D][20210615 15:41:28 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:11]
+<plot_graph_velocity: Computing edge velocities>
