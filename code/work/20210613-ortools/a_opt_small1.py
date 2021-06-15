@@ -4,6 +4,7 @@
 Try to use `ortools`.
 """
 
+from more_itertools import pairwise
 from ortools.constraint_solver import pywrapcp, routing_enums_pb2
 
 from itertools import product
@@ -51,7 +52,7 @@ def make_trips(graph, nmax=64):
     # Start time of trip
     trips = trips.assign(ta=rng.uniform(low=0, high=T, size=len(trips)).round())
 
-    log.debug(f"Trips preview: \n{trips.head()}")
+    log.debug(f"Trips preview (incl. 0): \n{trips.head()}")
 
     return trips
 
@@ -77,11 +78,58 @@ def solve(big_trips, big_graph):
     # (trips, graph) = reduce(big_trips, big_graph)
     (trips, graph) = (big_trips, big_graph)
 
+    assert set(graph.nodes) == set(range(len(graph.nodes)))
+
+    nx.set_node_attributes(graph, {n: n for n in graph.nodes}, name='parent')
+
+    def shadow(i):
+        assert i in graph.nodes
+        j = len(graph.nodes)
+
+        graph.add_node(j, **{'parent': i})
+
+        for (a, _, d) in graph.in_edges(i, data=True):
+            graph.add_edge(a, i, **d)
+
+        for (_, b, d) in graph.out_edges(i, data=True):
+            graph.add_edge(i, b, **d)
+
+        eps = 0.1
+        graph.add_edge(i, j, len=eps)
+        graph.add_edge(j, i, len=eps)
+
+        return j
+
+    trips = trips.assign(ia=trips.ia.apply(shadow))
+    trips = trips.assign(ib=trips.ib.apply(shadow))
+
+    # log.debug(nx.get_node_attributes(graph, name='parent'))
+
     log.debug(f"Trips: \n{trips}")
 
     data = dict()
 
-    data['dist'] = nx.floyd_warshall_numpy(graph, weight='len')
+    data['dist'] = nx.adjacency_matrix(graph, weight='len').todense()
+
+    # # data['dist'] = nx.floyd_warshall_numpy(graph, weight='len')
+
+    data['dist'] = [
+        [
+            nx.shortest_path_length(graph, a, b, weight='len')
+
+            # nx.get_edge_attributes(graph, name='len')[(a, b)] if (a, b) in graph.edges
+            # else
+            # 0 if (a == b)
+            # else
+            # 1000
+
+            for b in graph.nodes
+        ]
+        for a in graph.nodes
+    ]
+
+    # print(data['dist'])
+    # exit(101)
 
     # data['dist'] = nx.linalg.graphmatrix.adjacency_matrix(graph, weight='len').todense()
     # data['dist'][data['dist'] == 0] = 1e3
@@ -118,17 +166,15 @@ def solve(big_trips, big_graph):
     distance_dimension = routing.GetDimensionOrDie('distance')
     distance_dimension.SetGlobalSpanCostCoefficient(100)
 
-    # routing.
-
-    log.warning("`trips` is ignored.")
-    data['pickups_deliveries'] = [
-        # [1, 2],
-        [2, 7],
-        # [5, 6],
-        [4, 3],
-        [5, 6],
-        # [3, 1],
-    ]
+    # log.warning("`trips` is ignored.")
+    # data['pickups_deliveries'] = [
+    #     # [1, 2],
+    #     [2, 7],
+    #     # [5, 6],
+    #     [4, 3],
+    #     [5, 6],
+    #     # [3, 1],
+    # ]
 
     for (n, (ia, ib)) in enumerate(data['pickups_deliveries']):
         ja = manager.NodeToIndex(ia)
@@ -140,15 +186,12 @@ def solve(big_trips, big_graph):
         routing.solver().Add(routing.VehicleVar(ja) == routing.VehicleVar(jb))
         routing.solver().Add(distance_dimension.CumulVar(ja) <= distance_dimension.CumulVar(jb))
 
-
-
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = routing_enums_pb2.FirstSolutionStrategy.PARALLEL_CHEAPEST_INSERTION
 
-
     solution = routing.SolveWithParameters(search_parameters)
 
-    log.info(routing.status())
+    log.info(f"Status: {routing.status()}.")
 
     def print_solution(data, manager, routing, solution):
         # with contextlib.redirect_stdout
@@ -160,7 +203,9 @@ def solve(big_trips, big_graph):
             plan_output = 'Route for vehicle {}:\n'.format(vehicle_id)
             route_distance = 0
             while not routing.IsEnd(index):
-                plan_output += ' {} -> '.format(manager.IndexToNode(index))
+                n = manager.IndexToNode(index)
+                n = nx.get_node_attributes(graph, name='parent')[n]
+                plan_output += " {} -> ".format(n)
                 previous_index = index
                 index = solution.Value(routing.NextVar(index))
                 route_distance += routing.GetArcCostForVehicle(
@@ -170,7 +215,6 @@ def solve(big_trips, big_graph):
             print(plan_output)
             total_distance += route_distance
         print('Total Distance of all routes: {}m'.format(total_distance))
-
 
     print_solution(data, manager, routing, solution)
     exit(101)
@@ -192,12 +236,18 @@ def solve(big_trips, big_graph):
     print(get_routes(solution, routing, manager))
     exit()
 
-
     # pywrapcp.Ro
 
 
 def main():
-    graph = odd_king_graph(4, 2)
+    # graph = odd_king_graph(2, 2)
+
+    graph = nx.DiGraph()
+    graph.add_edges_from(pairwise(list(range(6)) + [0]))
+    nx.set_edge_attributes(graph, 1, name='len')
+    # pos = nx.circular_layout(graph)
+    pos = nx.spring_layout(graph, pos=nx.planar_layout(graph, scale=1))
+    nx.set_node_attributes(graph, pos, name='pos')
 
     # randomize edge lengths
     nx.set_edge_attributes(
@@ -208,8 +258,11 @@ def main():
 
     # with draw(graph) as px:
     #     px.show()
+    #     exit(101)
 
-    trips = make_trips(graph, nmax=4)
+    # trips = make_trips(graph, nmax=4)
+    trips = pd.DataFrame([(1, 4), (2, 3), (4, 2)], columns=['ia', 'ib'])
+
     trips = trips[(trips != 0).all(axis=1)]  # remove the depot location
     assert len(trips)
 

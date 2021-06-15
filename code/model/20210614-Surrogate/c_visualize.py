@@ -1,5 +1,7 @@
 # RA, 2021-06-14
 
+EDGE_WEIGHT_KEY = "len"
+
 import pandas as pd
 import networkx as nx
 import tensorflow as tf
@@ -21,11 +23,10 @@ from opt_utils.graph import largest_component, GraphNearestNode, GraphPathDist
 from opt_utils.style import default_style
 from opt_utils.misc import Section
 
-from b_train import make_df, load_graph, AREA, BASE, DATA, EDGE_WEIGHT_KEY
-
-out_dir = mkdir(Path(__file__).with_suffix(''))
+from b_train import make_df, load_graph, AREA, BASE, DATA
 
 path_to_model = max(BASE.glob(f"**/v*/{EDGE_WEIGHT_KEY}/**/model.tf"))
+out_dir = mkdir(Path(__file__).with_suffix('') / f"{EDGE_WEIGHT_KEY}")
 
 
 def load_model():
@@ -74,9 +75,14 @@ def outlier_trajectories(df: pd.DataFrame):
 
 def estimated_vs_reference(df: pd.DataFrame):
     with Plox() as px:
-        px.a.scatter((df.y * 1e-3), (df.p * 1e-3), s=20, c='C3', alpha=0.3, edgecolor='none')
-        px.a.set_xlabel("Reference, km")
-        px.a.set_ylabel("Estimated, km")
+        if EDGE_WEIGHT_KEY == "len":
+            px.a.scatter((df.y * 1e-3), (df.p * 1e-3), s=20, c='C3', alpha=0.3, edgecolor='none')
+            px.a.set_xlabel("Reference, km")
+            px.a.set_ylabel("Estimated, km")
+        if EDGE_WEIGHT_KEY == "lag":
+            px.a.scatter((df.y / 60), (df.p / 60), s=20, c='C3', alpha=0.3, edgecolor='none')
+            px.a.set_xlabel("Reference, min")
+            px.a.set_ylabel("Estimated, min")
         (mi, ma) = (0, max([*px.a.get_xlim(), *px.a.get_ylim()]))
         px.a.plot([mi, ma], [mi, ma], '--', lw=1, c='k')
         px.a.set_xlim(mi, ma)
@@ -111,7 +117,7 @@ def main():
     model = load_model()
     visualize_model(model)
 
-    df = make_df(1000, seed=1000)
+    df = make_df(1000, seed=1000, area=AREA, edge_weight_key=EDGE_WEIGHT_KEY)
     df = df.assign(p=model.predict(df.drop(columns='y')))
 
     outlier_trajectories(df)
