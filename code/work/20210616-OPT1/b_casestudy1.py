@@ -112,8 +112,8 @@ def plot_trajectories(graph, trips, edge_weight=EDGE_TTT_KEY) -> Plox:
 def attach_timewindows(trips: pd.DataFrame):
     (a_early, a_late) = (timedelta(minutes=3), timedelta(minutes=10))
     (b_early, b_late) = (timedelta(minutes=20), timedelta(minutes=15))
-    trips['twa'] = trips.ta.apply(lambda t: (t - a_early, t + a_late))
-    trips['twb'] = trips.tb.apply(lambda t: (t - b_early, t + b_late))
+    trips = trips.assign(twa=trips.ta.apply(lambda t: (t - a_early, t + a_late)))
+    trips = trips.assign(twb=trips.tb.apply(lambda t: (t - b_early, t + b_late)))
     return trips
 
 
@@ -160,7 +160,7 @@ def formulate_problem():
     trips = concentrated_subset(trips)
 
     # TODO: remove
-    trips = trips.head(15)
+    trips = trips.head(7)
     log.warning(f"Reducing the number of trips to {len(trips)}.")
 
     with plot_trajectories(graph, trips) as px:
@@ -311,10 +311,16 @@ def solve(problem):
     dim_travel_time = routing.GetDimensionOrDie('travel_time')
     dim_travel_time.SetGlobalSpanCostCoefficient(100)
 
+    # Register all slack variables with the `assignment` -- ?
+
+    # for i in graph.nodes:
+    #     routing.AddToAssignment(dim_travel_time.SlackVar(manager.NodeToIndex(i)))
+
     # Vehicle start time window
 
     for iv in range(num_vehicles):
         dim_travel_time.CumulVar(routing.Start(iv)).SetRange(rel_t(t0), rel_t(t0 + timedelta(hours=3)))
+        routing.AddToAssignment(dim_travel_time.SlackVar(routing.Start(iv)))
 
     for iv in range(num_vehicles):
         routing.AddVariableMinimizedByFinalizer(dim_travel_time.CumulVar(routing.Start(iv)))
@@ -335,11 +341,17 @@ def solve(problem):
         (ja, jb) = map(manager.NodeToIndex, (trip.ia, trip.ib))
         dim_travel_time.CumulVar(ja).SetRange(*map(rel_t, trip.twa))  # pickup
         dim_travel_time.CumulVar(jb).SetRange(*map(rel_t, trip.twb))  # delivery
+        routing.AddToAssignment(dim_travel_time.SlackVar(ja))
+        routing.AddToAssignment(dim_travel_time.SlackVar(jb))
 
     # Demands & capacities
     # https://developers.google.com/optimization/routing/penalties
 
-    demands = trips[['ia', 'n']].set_index('ia').n.reindex(graph.nodes).fillna(0).astype(int)
+    demands = (
+            trips[['ia', 'n']].set_index('ia').n.reindex(graph.nodes).fillna(0).astype(int) -
+            trips[['ib', 'n']].set_index('ib').n.reindex(graph.nodes).fillna(0).astype(int)
+    )
+
     log.debug(f"Demands: {demands.to_dict()}.")
 
     def demand_callback(j):
@@ -356,6 +368,9 @@ def solve(problem):
         # initially, the vehicles are empty:
         fix_start_cumul_to_zero=True,
     )
+
+    dim_capacity = routing.GetDimensionOrDie('vehicle_capacity')
+    dim_capacity.SetGlobalSpanCostCoefficient(0)
 
     # Allow to drop nodes
 
@@ -376,7 +391,7 @@ def solve(problem):
     with Section("Running `ortools` solver", out=log.info):
         assignment: Assignment = routing.SolveWithParameters(params)
 
-    print(assignment)
+    log.info(f"Assignment: {assignment}")
     log.info(f"Success: {routing.status() == OrStatus.SUCCESS}")
 
     # Repackage the solution
@@ -393,17 +408,19 @@ def solve(problem):
 
     log.info(f"Unserviced nodes: {unserviced}.")
 
-    def get_routes(manager, routing, assignment):
+    def get_routes():
         for iv in range(manager.GetNumberOfVehicles()):
             def get_route_from(j):
                 while True:
-                    yield manager.IndexToNode(j)
+                    i = manager.IndexToNode(j)
+                    slack = assignment.Value(dim_travel_time.SlackVar(j)) if routing.IsStart(j) else np.nan
+                    yield (i, j, assignment.Value(dim_capacity.CumulVar(j)), slack)
                     if routing.IsEnd(j):
                         break
                     else:
                         j = assignment.Value(routing.NextVar(j))
 
-            route = pd.DataFrame(data={'i': list(get_route_from(routing.Start(iv)))})
+            route = pd.DataFrame(data=get_route_from(routing.Start(iv)), columns=['i', 'j', 'load', 'slack'])
 
             route = route.assign(cost=np.cumsum(
                 [0] +
@@ -412,24 +429,36 @@ def solve(problem):
 
             yield route
 
-    routes = list(get_routes(manager, routing, assignment))
+    routes = list(get_routes())
 
-    def cum_path_time(graph, segments):
-        # Typically: cum_path_length(graph, pairwise(path))
-        ts = np.cumsum([0] + [nx.shortest_path_length(graph, *seg, weight=EDGE_TTT_KEY) for seg in segments])
-        return t0 + ts * timedelta(seconds=1)
+    # [assignment.Value(dim_travel_time.SlackVar(i)) for i in demands[demands != 0].index]
+    # [assignment.Value(dim_travel_time.SlackVar(manager.NodeToIndex(i))) for i in trips.ia]
+
+    # Sanity check
+    for (iv, route) in enumerate(routes):
+        assert (routing.Start(iv) == first(route.j))
+
+    # Time of arrival at each intermediate node of route, according to the solver
 
     routes = [
-        route.assign(time=(
-            timedelta(seconds=assignment.Value(dim_travel_time.CumulVar(routing.Start(iv)))) +
-            cum_path_time(graph, pairwise(route.i))
-        ))
-        for (iv, route) in enumerate(routes)
+        route.assign(est_time_arr=[
+            t0 + timedelta(seconds=1) * assignment.Value(dim_travel_time.CumulVar(j))
+            for j in route.j
+        ])
+        for route in routes
     ]
 
-    for route in routes:
-        # log.info(f"Vehicle route: \n{route}")
-        log.info(f"Vehicle route: \n{route.assign(add_load=list(demands[route.i]))}")
+    # Estimate the time of departure
+
+    routes = [
+        route.assign(est_time_dep=(
+                [
+                    tb - timedelta(seconds=1) * nx.shortest_path_length(graph, a, b, weight=EDGE_TTT_KEY)
+                    for ((a, b), (_, tb)) in zip(pairwise(route.i), pairwise(route.time_arr))
+                ] + [np.nan]
+        ))
+        for route in routes
+    ]
 
     # Infer pickups and deliveries
 
@@ -442,14 +471,12 @@ def solve(problem):
                     route = route.loc[unlist1(route[route.i == trip.ia].index):]
                     log.debug(f"\n{route.head(3)}")
                     trips.loc[i, 'iv'] = iv
-                    trips.loc[i, 'iv_ta'] = first(route.time)
-                    trips.loc[i, 'iv_tb'] = route.time[unlist1(route[route.i == trip.ib].index)]
+                    trips.loc[i, 'iv_ta'] = first(route.est_time_dep)
+                    trips.loc[i, 'iv_tb'] = route.est_time_arr[unlist1(route[route.i == trip.ib].index)]
 
     log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
 
     # Visualize
-
-
 
 
 def main():
