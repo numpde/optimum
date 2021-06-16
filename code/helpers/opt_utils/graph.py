@@ -207,7 +207,8 @@ class GraphNearestNode(ContextManager):
 
     def __call__(self, locs):
         # Get nearest nodes: distance to X and index in X
-        (d, i) = np.squeeze(self.T.query(np.asarray(locs) * self.RAD_PER_DEGREE, k=1, return_distance=True))
+        (d, i) = self.T.query(np.asarray(locs) * self.RAD_PER_DEGREE, k=1, return_distance=True)
+        (d, i) = (np.squeeze(d, axis=-1), np.squeeze(i, axis=-1))
         # Note: do not sort the Series
         s = pd.Series(index=(self.X.index[list(map(int, i))]), data=(d * self.EARTH_RADIUS_METERS))
         return s

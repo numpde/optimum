@@ -96,10 +96,9 @@ def make_model():
     model = tf.keras.models.Sequential([
         tf.keras.layers.InputLayer(input_shape=[4]),
         tf.keras.layers.BatchNormalization(),
-        tf.keras.layers.Dense(units=32, activation='swish'),
-        tf.keras.layers.Dropout(0.25),
         tf.keras.layers.Dense(units=16, activation='swish'),
-        tf.keras.layers.Dense(units=8, activation='swish'),
+        tf.keras.layers.Dense(units=16, activation='swish'),
+        tf.keras.layers.Dense(units=16, activation='swish'),
         tf.keras.layers.Dense(units=1, activation='relu')
     ])
 
@@ -125,10 +124,10 @@ def main():
 
     model.fit(
         ds_train.shuffle(2 ** 10).batch(64),
-        epochs=1200,
+        epochs=700,
         callbacks=[
             tf.keras.callbacks.EarlyStopping(patience=111, monitor='loss'),
-            tf.keras.callbacks.ReduceLROnPlateau(patience=10, monitor='loss', factor=0.9, min_lr=1e-5, cooldown=5),
+            tf.keras.callbacks.ReduceLROnPlateau(patience=7, monitor='loss', factor=0.95, min_lr=1e-5, cooldown=3),
             FunctionalLogger({"lr": (lambda m: m.optimizer.lr)}),
             tf.keras.callbacks.TensorBoard(log_dir, histogram_freq=1),
             tf.keras.callbacks.ModelCheckpoint(log_dir / "model.tf", save_best_only=True, monitor='val_loss'),
