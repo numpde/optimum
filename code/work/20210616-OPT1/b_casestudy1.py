@@ -38,6 +38,8 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
+import percache
+
 from geopy.distance import distance as geodistance
 
 from tcga.utils import unlist1, relpath, mkdir, first, Now, whatsmyname
@@ -60,6 +62,14 @@ table_names = sorted({"green_tripdata_2016-05", "yellow_tripdata_2016-05"})
 # Focal point
 TIMES_SQUARE = (40.75798, -73.98550)
 TIME_WINDOW = 15  # minutes
+
+
+def myrepr(obj):
+    return repr(obj)
+
+
+cache = percache.Cache(str(out_dir / f"percache.dat"), livesync=True, repr=myrepr)
+cache.clear(maxage=(60 * 60 * 24 * 7))
 
 
 # https://developers.google.com/optimization/routing/routing_options
@@ -110,8 +120,8 @@ def plot_trajectories(graph, trips, edge_weight=EDGE_TTT_KEY) -> Plox:
 
 
 def attach_timewindows(trips: pd.DataFrame):
-    (a_early, a_late) = (timedelta(minutes=3), timedelta(minutes=10))
-    (b_early, b_late) = (timedelta(minutes=20), timedelta(minutes=15))
+    (a_early, a_late) = (timedelta(minutes=2), timedelta(minutes=10))
+    (b_early, b_late) = (timedelta(minutes=20), timedelta(minutes=10))
     trips = trips.assign(twa=trips.ta.apply(lambda t: (t - a_early, t + a_late)))
     trips = trips.assign(twb=trips.tb.apply(lambda t: (t - b_early, t + b_late)))
     return trips
@@ -129,47 +139,10 @@ def concentrated_subset(trips: pd.DataFrame):
     return trips
 
 
-def formulate_problem():
-    area = AREA
+@cache
+def reduce_to_clique(problem: pd.Series, hash=None):
+    log.debug(f"{whatsmyname()} is busy now...")
 
-    where = f"""
-        ('2016-05-01 18:00' <= ta) and (ta <= '2016-05-01 18:{TIME_WINDOW:02}')
-        and (passenger_count == 1)
-    """
-
-    trips = pd.concat(axis=0, objs=[
-        get_raw_trips(table_name, where=where).assign(table_name=table_name)
-        for table_name in sorted(table_names)
-    ])
-
-    assert len(trips), \
-        f"Query returned zero trips. Maybe a misshappen `where`: \n{where}"
-
-    trips = trips[list(KEEP_COLS)].sort_values(by='ta')
-    trips = trips.assign(xa=list(zip(trips.xa_lat, trips.xa_lon)))
-    trips = trips.assign(xb=list(zip(trips.xb_lat, trips.xb_lon)))
-
-    log.debug(f"Trips: \n{trips.head(3).to_markdown()} \netc.")
-
-    graph = largest_component(load_graph(area))
-    trips = with_nearest_ingraph(trips, graph)
-
-    trips = attach_timewindows(trips)
-
-    # Simplify problem
-    trips = concentrated_subset(trips)
-
-    # TODO: remove
-    trips = trips.head(7)
-    log.warning(f"Reducing the number of trips to {len(trips)}.")
-
-    with plot_trajectories(graph, trips) as px:
-        px.f.savefig(out_dir / f"bare_trajectories.png")
-
-    return pd.Series({'area': area, 'table_names': table_names, 'graph': graph, 'trips': trips})
-
-
-def reduce_to_clique(problem):
     # 0. Identify a depot node
 
     n_depot = unlist1(GraphNearestNode(problem.graph)([TIMES_SQUARE]).index)
@@ -203,8 +176,7 @@ def reduce_to_clique(problem):
     # node #0 is the depot
     assert (graph.nodes[0][parent_attr] == n_depot)
 
-    i2n = nx.get_node_attributes(graph, name=parent_attr)
-    n2i = {o: i for (i, o) in i2n.items()}
+    n2i = {o: i for (i, o) in nx.get_node_attributes(graph, name=parent_attr).items()}
 
     trips.ia = trips.ia.map(n2i)
     trips.ib = trips.ib.map(n2i)
@@ -239,19 +211,59 @@ def reduce_to_clique(problem):
     trips = trips.assign(ia=trips.ia.apply(shadow))
     trips = trips.assign(ib=trips.ib.apply(shadow))
 
-    return pd.Series({'graph': graph, 'trips': trips})
+    problem = problem.copy()
+    problem['graph'] = graph
+    problem['trips'] = trips
+    problem['original_node'] = nx.get_node_attributes(graph, name=parent_attr)
+
+    return problem
 
 
-def solve(problem):
+@cache
+def get_problem_data(area: str, where: str, max_trips: int):
+    trips = pd.concat(axis=0, objs=[
+        get_raw_trips(table_name, where=where).assign(table_name=table_name)
+        for table_name in sorted(table_names)
+    ])
+
+    assert len(trips), \
+        f"Query returned zero trips. Maybe a misshappen `where`: \n{where}"
+
+    trips = trips[list(KEEP_COLS)].sort_values(by='ta')
+    trips = trips.assign(xa=list(zip(trips.xa_lat, trips.xa_lon)))
+    trips = trips.assign(xb=list(zip(trips.xb_lat, trips.xb_lon)))
+
+    graph = largest_component(load_graph(area))
+    trips = with_nearest_ingraph(trips, graph)
+
+    trips = attach_timewindows(trips)
+
+    trips = trips.head(max_trips)
+
+    log.debug(f"Trips: \n{trips.head(3).to_markdown()} \netc.")
+    log.info(f"Number of trips: {len(trips)}.")
+
+    # Simplify problem (subset in space-time)
+    trips = concentrated_subset(trips)
+
+    with plot_trajectories(graph, trips) as px:
+        px.f.savefig(out_dir / f"bare_trajectories.png")
+
+    return pd.Series({'area': area, 'table_names': table_names, 'graph': graph, 'trips': trips})
+
+
+def solve(problem: pd.Series, **params):
     graph: nx.DiGraph = problem.graph
     trips: pd.DataFrame = problem.trips
 
+    num_vehicles = params['num_vehicles']  # Number of buses
+    cap_vehicles = params['cap_vehicles']  # Bus passenger capacity
+
     depot = 0
-    num_vehicles = 5
-    capacities = [10] * num_vehicles
+    capacities = [cap_vehicles] * num_vehicles
 
     assert (graph.number_of_nodes() <= 1000), \
-        "The graph seems too large for this code."
+        f"The graph seems too large for this code."
 
     assert (depot in graph.nodes), \
         f"The depot node {depot} not found in the graph."
@@ -282,8 +294,8 @@ def solve(problem):
 
     from ortools.constraint_solver.pywrapcp import RoutingIndexManager, RoutingModel
     from ortools.constraint_solver.pywrapcp import DefaultRoutingSearchParameters
-    from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy
     from ortools.constraint_solver.pywrapcp import Assignment
+    from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy
 
     manager = RoutingIndexManager(graph.number_of_nodes(), num_vehicles, depot)
     routing = RoutingModel(manager)
@@ -374,7 +386,7 @@ def solve(problem):
 
     # Allow to drop nodes
 
-    penalty_unserviced = 1000  # TODO:?
+    penalty_unserviced = 10000  # TODO:?
 
     for node in demands[demands != 0].index:
         routing.AddDisjunction([manager.NodeToIndex(node)], penalty_unserviced)
@@ -383,15 +395,15 @@ def solve(problem):
 
     params = DefaultRoutingSearchParameters()
     params.first_solution_strategy = FirstSolutionStrategy.PATH_CHEAPEST_ARC
-    # params.time_limit.seconds = 30  # TODO
-    params.solution_limit = 100  # TODO
+    params.time_limit.seconds = 60 * 30  # TODO
+    # params.solution_limit = 100  # TODO
 
     # Solve
 
     with Section("Running `ortools` solver", out=log.info):
         assignment: Assignment = routing.SolveWithParameters(params)
 
-    log.info(f"Assignment: {assignment}")
+    log.info(f"Assignment: {str(assignment)[0:40]}...")
     log.info(f"Success: {routing.status() == OrStatus.SUCCESS}")
 
     # Repackage the solution
@@ -454,7 +466,7 @@ def solve(problem):
         route.assign(est_time_dep=(
                 [
                     tb - timedelta(seconds=1) * nx.shortest_path_length(graph, a, b, weight=EDGE_TTT_KEY)
-                    for ((a, b), (_, tb)) in zip(pairwise(route.i), pairwise(route.time_arr))
+                    for ((a, b), (_, tb)) in zip(pairwise(route.i), pairwise(route.est_time_arr))
                 ] + [np.nan]
         ))
         for route in routes
@@ -474,17 +486,148 @@ def solve(problem):
                     trips.loc[i, 'iv_ta'] = first(route.est_time_dep)
                     trips.loc[i, 'iv_tb'] = route.est_time_arr[unlist1(route[route.i == trip.ib].index)]
 
+    # log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
+
+    return (trips, routes)
+
+
+def compute_all(**params):
+    problem_data_params = dict(area=params['area'], where=params['where'], max_trips=params['problem_data_max_trips'])
+    problem_data = get_problem_data(**problem_data_params)
+
+    reduced_problem_data = reduce_to_clique(problem_data, hash=problem_data_params)
+    (trips, routes) = solve(reduced_problem_data, **params)
+
+    trips = trips.assign(ia=trips.ia.map(reduced_problem_data.original_node))
+    trips = trips.assign(ib=trips.ib.map(reduced_problem_data.original_node))
+
+    routes = [
+        route.assign(i=route.i.map(reduced_problem_data.original_node))
+        for route in routes
+    ]
+
     log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
 
-    # Visualize
+    return (problem_data.graph, trips, routes)
+
+
+def visualize(graph, trips, routes):
+    import plotly.graph_objects as go
+    import plotly.express as px
+
+    # log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
+
+    rng = np.random.default_rng(seed=43)
+
+    node_loc = pd.DataFrame(nx.get_node_attributes(graph, name='loc'), index=["lat", "lon"])
+    edge_lag = nx.get_edge_attributes(graph, name=EDGE_TTT_KEY)
+
+    fig = go.Figure()
+
+    for (i, trip) in trips.iterrows():
+        # color = rng.choice(px.colors.sequential.Plasma)
+
+        # Pickup timewindow
+        fig.add_trace(
+            go.Scatter3d(
+                x=[trip.xa_lon] * 2,
+                y=[trip.xa_lat] * 2,
+                z=trip.twa,
+                # marker=dict(size=0),
+                line=dict(width=2, color="green"),
+                mode="lines",
+            ),
+        )
+
+        # Dropoff timewindow
+        fig.add_trace(
+            go.Scatter3d(
+                x=[trip.xb_lon] * 2,
+                y=[trip.xb_lat] * 2,
+                z=trip.twb,
+                # marker=dict(size=0),
+                line=dict(width=2, color="red"),
+                mode="lines",
+            ),
+        )
+
+        # Connect
+        if not pd.isna(trip.iv_ta) and not pd.isna(trip.iv_ta):
+            fig.add_trace(
+                go.Scatter3d(
+                    x=[trip.xa_lon, trip.xb_lon],
+                    y=[trip.xa_lat, trip.xb_lat],
+                    z=[trip.iv_ta, trip.iv_tb],
+                    # marker=dict(size=0),
+                    line=dict(width=1, color="green", dash="dash"),
+                    mode="lines",
+                ),
+            )
+
+        # fig.add_trace(
+        #     go.Scatter3d(
+        #         x=path.lon,
+        #         y=path.lat,
+        #         # z=path.lag,
+        #         z=(path.lag - t0).dt.total_seconds() / 60,
+        #         # marker=dict(size=0),
+        #         line=dict(width=1, color=color),
+        #         mode="lines",
+        #     ),
+        # )
+
+    for route in routes:
+        if max(route.load) == 0:
+            continue
+
+        color = rng.choice(["black", "blue", "brown", "magenta"])
+
+        log.debug(f"Route: \n{route.to_markdown()}")
+
+        for (uv, (ta, tb)) in zip(pairwise(route.i), pairwise(route.est_time_dep)):
+            path = nx.shortest_path(graph, *uv, weight=EDGE_TTT_KEY)
+            path = node_loc[list(path)].T
+            path = path.assign(
+                lag=(np.cumsum([ta] + [timedelta(seconds=1) * edge_lag[e] for e in pairwise(path.index)])))
+
+            fig.add_trace(
+                go.Scatter3d(
+                    x=path.lon,
+                    y=path.lat,
+                    z=path.lag,
+                    # marker=dict(size=0),
+                    line=dict(width=1, color=color),
+                    mode="lines",
+                ),
+            )
+
+    fig.update_layout(
+        showlegend=False,
+        scene=dict(
+            xaxis_title="lon",
+            yaxis_title="lat",
+            zaxis_title="",
+        ),
+    )
+
+    fig.write_html(str(out_dir / f"{whatsmyname()}.html"))
 
 
 def main():
-    problem = formulate_problem()
-    problem = reduce_to_clique(problem)
-    log.info(f"Number of trips: {len(problem.trips)}.")
+    params = {
+        'area': AREA,
+        'problem_data_max_trips': 100,
+        'where': f"""
+            ('2016-05-01 18:00' <= ta) and (ta <= '2016-05-01 18:{TIME_WINDOW:02}')
+            and (passenger_count == 1)
+        """,
 
-    solve(problem)
+        'num_vehicles': 10,
+        'cap_vehicles': 10,
+    }
+
+    (graph, trips, routes) = compute_all(**params)
+    visualize(graph, trips, routes)
 
 
 if __name__ == '__main__':

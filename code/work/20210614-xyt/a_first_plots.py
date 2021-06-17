@@ -38,10 +38,10 @@ EDGE_TTT_KEY = 'lag'  # time-to-transition
 
 graph_source = max(DATA.glob(f"*WithLag/*train/**/lag/H=18"))
 
-cache = percache.Cache(str(mkdir(Path(__file__).parent / "z_cache") / f"percache.dat"), livesync=True)
-cache.clear(maxage=(60 * 60 * 24 * 7))
-
 out_dir = mkdir(Path(__file__).with_suffix(''))
+
+cache = percache.Cache(str(out_dir / f"percache.dat"), livesync=True)
+cache.clear(maxage=(60 * 60 * 24 * 7))
 
 parallel_map = map
 

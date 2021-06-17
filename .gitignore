@@ -2,6 +2,7 @@ download_cache
 trips.db
 *.env
 percache.*
+cache.*
 
 ## github template:
 
