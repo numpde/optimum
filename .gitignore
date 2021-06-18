@@ -1,8 +1,12 @@
+
 download_cache
 trips.db
 *.env
 percache.*
 cache.*
+
+tex/main.*
+!*.tex
 
 ## github template:
 

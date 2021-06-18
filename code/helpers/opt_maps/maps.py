@@ -30,7 +30,7 @@ import dotenv
 # Load the MapBox token, if present
 dotenv.load_dotenv(Path(__file__).with_suffix('.env'))
 
-cache = percache.Cache(str(mkdir(Path(__file__).parent / "cache") / "percache_maps"), livesync=True)
+cache = percache.Cache(str(mkdir(Path(__file__).parent / "cache") / "percache_maps2"), livesync=True)
 
 PARAM = {
     'do_retina': True,

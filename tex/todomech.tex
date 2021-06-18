@@ -1,0 +1,41 @@
+
+% https://bitbucket.org/goodnightmath/covariance/src/master/tex/main.tex
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\providecommand{\TODO}[1]{\textrm{\color{red}TODO: #1}}
+
+% http://tex.stackexchange.com/a/106577/44073
+\usepackage{ifthen}
+\newcounter{todoindex}\setcounter{todoindex}{0}
+\newcommand\ADDTODO[1]{%
+	\addtocounter{todoindex}{1}%
+	\expandafter\gdef\csname todo\roman{todoindex}\endcsname{#1}%
+	%\expandafter\csname todolabel\roman{todoindex}\endcsname
+	\label{todolabel\roman{todoindex}}%
+}
+\renewcommand\TODO[1]{%
+	{%
+		\ADDTODO{#1}%
+		{\textrm{\color{red}TODO(\arabic{todoindex}): #1}}%
+	}%
+}
+\newcommand\CHECK[1]{%
+	\ADDTODO{CHECK CLAIM: {#1}}%
+	{\color{toverify}#1}%
+	\smash{\marginnote{\text{\color{red}*}}}%
+}
+\newcounter{indextodo}
+\newcommand{\SHOWTODOS}{%
+	\setcounter{indextodo}{0}%
+	\begin{enumerate}
+	\item[{\color{red} TODOs:}]
+	\whiledo{\value{indextodo} < \value{todoindex}}{%
+		\addtocounter{indextodo}{1}%
+		\item[\color{red}\arabic{indextodo}.]
+		p.\pageref{todolabel\roman{indextodo}}.
+		%
+		\csname todo\roman{indextodo}\endcsname
+	}%
+	\end{enumerate}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

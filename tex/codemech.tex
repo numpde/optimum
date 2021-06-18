@@ -1,0 +1,48 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\providecommand{\CODE}[1]{\href{#1}{code}}
+\providecommand{\SHOWCODES}{}
+
+% !
+\usepackage[strings]{underscore}
+
+\newcommand\codeprefix{https://github.com/numpde/optimum/blob/main/}
+
+% http://tex.stackexchange.com/a/10657\texttt{7/44073
+\usepackage{ifthen}
+\newcounter{codeindex}\setcounter{codeindex}{0}
+\newcommand\ADDCODE[1]{%
+	\addtocounter{codeindex}{1}%
+	\expandafter\gdef\csname code\roman{codeindex}\endcsname{#1}%
+	\label{codelabel\roman{codeindex}}%
+}
+\renewcommand\CODE[1]{%
+	{%
+		\ADDCODE{\href{\codeprefix#1}{\texttt{#1}}}%
+		{\href{\codeprefix#1}{\#\arabic{codeindex}}}%
+	}%
+}
+\newcount\fooo
+\newcounter{indexcode}
+\long\def\addto#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
+\renewcommand{\SHOWCODES}{%
+	\def\tabledata{}
+	\setcounter{indexcode}{0}%
+	\fooo=0\loop\advance\fooo+1
+		\addto\tabledata{%
+			\addtocounter{indexcode}{1}%
+			\#\arabic{indexcode} &
+			p.\pageref{codelabel\roman{indexcode}} &
+			\csname code\roman{indexcode}\endcsname \\ 
+		}
+	\ifnum \fooo < \thecodeindex
+	\repeat
+	
+	\begin{tabular}{c|c|c}
+		 & page & \url{\codeprefix} ... \\
+		\hline
+		\tabledata
+	\end{tabular}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+

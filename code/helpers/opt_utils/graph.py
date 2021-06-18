@@ -218,16 +218,18 @@ class GraphNearestNode(ContextManager):
 
 
 class GraphPathDist(ContextManager):
-    def __init__(self, graph: nx.DiGraph, edge_weight="len"):
+    def __init__(self, graph: nx.DiGraph, edge_weight="len", heuristic_geodist_factor=1):
         self.i2n = pd.Series(index=range(len(graph.nodes)), data=list(graph.nodes)).to_dict()
         self.n2i = pd.Series(index=list(graph.nodes), data=range(len(graph.nodes))).to_dict()
         self.graph = nx.convert_node_labels_to_integers(graph)
         self.edge_weight = edge_weight
         self.lens = nx.get_edge_attributes(self.graph, name=edge_weight)
         self.approx_geodist = ApproxGeodistance(self.graph)
+        self.heuristic_geodist_factor = heuristic_geodist_factor
 
     def astar_heuristic(self, u, v):
-        return 2 * self.approx_geodist.node_dist_est(u, v)
+        # heuristic is admissible if it never overestimates the actual cost
+        return self.approx_geodist.node_dist_est(u, v) * self.heuristic_geodist_factor
 
     def length_of(self, path):
         return sum(self.lens[e] for e in pairwise(path))
@@ -242,7 +244,7 @@ class GraphPathDist(ContextManager):
             source=self.n2i[uv[0]],
             target=self.n2i[uv[1]],
             heuristic=self.astar_heuristic,
-            weight=self.edge_weight
+            weight=self.edge_weight,
         )
 
         # Respect the order:

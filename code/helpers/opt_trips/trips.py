@@ -28,8 +28,8 @@ KEEP_COLS = ['ta', 'tb', 'xa_lon', 'xa_lat', 'xb_lon', 'xb_lat', 'n', 'distance'
 
 parallel_map = map
 
-cache = percache.Cache(str(mkdir(Path(__file__).parent / "cache") / "percache.dat"), livesync=True)
-cache.clear(maxage=(60 * 60 * 24 * 7))
+# cache = percache.Cache(str(mkdir(Path(__file__).parent / "cache") / "percache.dat"), livesync=True)
+# cache.clear(maxage=(60 * 60 * 24 * 7))
 
 
 def query_trips(sql):
@@ -104,7 +104,7 @@ def with_shortest_distance(trips, graph, edge_weight="len"):
         )
 
 
-@cache
+# @cache
 def get_trips_mit_alles(area: str, table_names: List[str], keep_cols=tuple(KEEP_COLS), **kwargs):
     trips = pd.concat(axis=0, objs=[
         get_raw_trips(table_name, **kwargs).assign(table_name=table_name)

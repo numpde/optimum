@@ -18,7 +18,7 @@ import pandas as pd
 
 from itertools import groupby
 
-from plox import Plox
+from plox import Plox, rcParam
 from tcga.utils import unlist1, mkdir, whatsmyname
 
 from opt_maps import maps
@@ -43,14 +43,14 @@ def trip_distance_histogram(table_name):
     # Convert to km
     trip_distance *= (1e-3)
 
-    with Plox(default_style) as px:
+    with Plox({**default_style, rcParam.Figure.figsize: (8, 3)}) as px:
         trip_distance.hist(ax=px.a, label=f"{table_name}", color=name2color(table_name))
         px.a.set_yscale('log')
         px.a.set_xlabel('Trip distance, km')
         px.a.set_ylabel('Number of trips')
         px.a.set_xlim(0, 52)
         px.a.set_ylim(1, 2e7)
-        px.a.grid(False)
+        px.a.grid(linewidth=0.2)
         # px.a.legend()
 
         px.f.savefig(mkdir(out_dir / f"{whatsmyname()}") / f"{table_name}.png")
@@ -246,11 +246,11 @@ def trip_duration_vs_distance(table_name):
 if __name__ == '__main__':
     ff = [
         trip_distance_histogram,
-        trip_trajectories_initial,
-        pickup_hour_heatmap,
-        trip_speed_histogram,
-        running_number_of_trips,
-        trip_duration_vs_distance,
+        # trip_trajectories_initial,
+        # pickup_hour_heatmap,
+        # trip_speed_histogram,
+        # running_number_of_trips,
+        # trip_duration_vs_distance,
     ]
 
     tables = {"green_tripdata_2016-05", "yellow_tripdata_2016-05"}

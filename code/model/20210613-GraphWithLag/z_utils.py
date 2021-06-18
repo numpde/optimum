@@ -30,7 +30,7 @@ from opt_utils.misc import Section
 BASE = Path(__file__).parent
 DATA = next(p for p in BASE.parents for p in p.glob("**/data")).resolve()
 
-out_dir = mkdir(Path(__file__).with_suffix(''))
+# out_dir = mkdir(Path(__file__).with_suffix(''))
 
 parallel_map = map
 

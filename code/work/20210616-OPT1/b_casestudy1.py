@@ -1,7 +1,6 @@
 # RA, 2021-06-15
 
 """
-
 Focus on a short time-window around Times Square.
 
 ==
@@ -15,62 +14,57 @@ Working example
 https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/cvrptw.py
 """
 
+
+from z_sources import DATA, load_graph, EDGE_TTT_KEY
+
+
 import ortools
 
-from more_itertools import pairwise
+from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy
 
-EDGE_TTT_KEY = "lag"  # time-to-transition attribute
+# InitGoogleLogging()
 
-import tensorflow as tf
-
-import contextlib
-
-from twig import log
+from twig import log, LOG_FILE
 import logging
 
 log.parent.handlers[0].setLevel(logging.DEBUG)
 
+import contextlib
 from typing import List
 from pathlib import Path
 from datetime import timedelta, datetime
+from more_itertools import pairwise
 
 import numpy as np
 import pandas as pd
 import networkx as nx
 
+import json
 import percache
+
+from tqdm import tqdm as progressbar
 
 from geopy.distance import distance as geodistance
 
-from tcga.utils import unlist1, relpath, mkdir, first, Now, whatsmyname
-from plox import Plox
+from tcga.utils import unlist1, relpath, mkdir, first, Now, whatsmyname, First
+from plox import Plox, rcParam
 
 from opt_maps import maps
-from opt_utils.graph import largest_component, GraphNearestNode, GraphPathDist
-from opt_utils.misc import Section
-from opt_trips.trips import get_raw_trips, KEEP_COLS, with_nearest_ingraph, with_shortest_distance
+from opt_utils.graph import GraphNearestNode, GraphPathDist
+from opt_utils.misc import Section, JSONEncoder
 
 BASE = Path(__file__).parent
-DATA = next(p for p in BASE.parents for p in p.glob("**/model")).resolve()
-graph_source = max(DATA.glob(f"*WithLag/*train/**/lag/H=18"))
 
-out_dir = mkdir(Path(__file__).with_suffix(''))
-
-AREA = "manhattan"
-table_names = sorted({"green_tripdata_2016-05", "yellow_tripdata_2016-05"})
-
-# Focal point
-TIMES_SQUARE = (40.75798, -73.98550)
-TIME_WINDOW = 15  # minutes
-
-
-def myrepr(obj):
-    return repr(obj)
-
-
-cache = percache.Cache(str(out_dir / f"percache.dat"), livesync=True, repr=myrepr)
+cache = percache.Cache(str(mkdir(Path(__file__).with_suffix('')) / f"percache.dat"), livesync=True, repr=repr)
 cache.clear(maxage=(60 * 60 * 24 * 7))
 
+sql_string = First(str.split).then(' '.join)
+
+style = {rcParam.Font.size: 14}
+
+
+class globals:
+    out_dir = None
 
 # https://developers.google.com/optimization/routing/routing_options
 class OrStatus:
@@ -81,85 +75,33 @@ class OrStatus:
     INVALID = 4
 
 
-def load_graph(area):
-    file = max(graph_source.glob(f"**/{area}.pkl"))
-    log.debug(f"Graph file: {relpath(file)}")
-
-    with file.open(mode='rb') as fd:
-        import pickle
-        g = pickle.load(fd)
-
-    assert (type(g) is nx.DiGraph), \
-        f"{relpath(file)} has wrong type {type(g)}."
-
-    assert nx.get_edge_attributes(g, name=EDGE_TTT_KEY)
-
-    return g
-
-
-@contextlib.contextmanager
-def plot_trajectories(graph, trips, edge_weight=EDGE_TTT_KEY) -> Plox:
-    with GraphPathDist(graph, edge_weight=edge_weight) as gpd:
-        trajectories = list(map(gpd.path_only, zip(trips.ia, trips.ib)))
-
-    nodes = pd.DataFrame(data=nx.get_node_attributes(graph, "loc"), index=["lat", "lon"]).T
-
-    with Plox() as px:
-        extent = maps.ax4(nodes.lat, nodes.lon)
-
-        px.a.imshow(maps.get_map_by_bbox(maps.ax2mb(*extent)), extent=extent, interpolation='quadric', zorder=-100)
-        px.a.axis("off")
-
-        px.a.set_xlim(extent[0:2])
-        px.a.set_ylim(extent[2:4])
-
-        for traj in trajectories:
-            px.a.plot(*nodes.loc[list(traj), ['lon', 'lat']].values.T, alpha=0.7, lw=0.3)
-
-        yield px
-
-
-def attach_timewindows(trips: pd.DataFrame):
-    (a_early, a_late) = (timedelta(minutes=2), timedelta(minutes=10))
-    (b_early, b_late) = (timedelta(minutes=20), timedelta(minutes=10))
-    trips = trips.assign(twa=trips.ta.apply(lambda t: (t - a_early, t + a_late)))
-    trips = trips.assign(twb=trips.tb.apply(lambda t: (t - b_early, t + b_late)))
-    return trips
-
-
-def concentrated_subset(trips: pd.DataFrame):
-    max_dist = 2000  # meters
-
-    dist_to_times_square = pd.Series(index=trips.index, data=[
-        max(geodistance(row.xa, TIMES_SQUARE).m, geodistance(row.xb, TIMES_SQUARE).m)
-        for (i, row) in trips.iterrows()
-    ])
-
-    trips = trips[dist_to_times_square <= max_dist]
-    return trips
 
 
 @cache
 def reduce_to_clique(problem: pd.Series, hash=None):
-    log.debug(f"{whatsmyname()} is busy now...")
+    log.debug(f"`{whatsmyname()}` is busy now...")
 
-    # 0. Identify a depot node
-
-    n_depot = unlist1(GraphNearestNode(problem.graph)([TIMES_SQUARE]).index)
-    assert all(np.isclose(TIMES_SQUARE, problem.graph.nodes[n_depot]['loc'], rtol=1e-3))
+    n_depot = problem.depot
+    assert n_depot in set(problem.graph.nodes)
 
     # 1. Make clique graph of nodes-of-interest
 
     # Put `depot` first
-    support_nodes = [n_depot] + sorted(set(problem.trips.ia) | set(problem.trips.ib))
+    support_nodes = pd.Series([n_depot] + sorted(set(problem.trips.ia) | set(problem.trips.ib)))
 
-    # Note: This may be unnecessary (and somewhat restrictive)
-    assert pd.Series(support_nodes).is_unique
+    # Note: This may be unnecessary (and a little restrictive)
+    assert support_nodes.is_unique
+
+    with Section(f"Computing all-to-all distances", out=log.debug):
+        dist = {
+            a: pd.Series(nx.single_source_dijkstra_path_length(problem.graph, a, weight=EDGE_TTT_KEY))[support_nodes]
+            for a in progressbar(support_nodes)
+        }
 
     graph = nx.from_dict_of_dicts(create_using=nx.DiGraph, d={
         # all-to-all distance matrix
         a: {
-            b: {EDGE_TTT_KEY: nx.shortest_path_length(problem.graph, a, b, weight=EDGE_TTT_KEY)}
+            b: {EDGE_TTT_KEY: dist[a][b]}
             for b in support_nodes
             if (a != b)
         }
@@ -183,8 +125,10 @@ def reduce_to_clique(problem: pd.Series, hash=None):
 
     # 3. Shadow nodes to be serviced
 
-    # Nodes are consecutive integers now
+    # Nodes are consecutive integers now (order irrelevant)
     assert set(graph.nodes) == set(range(len(graph.nodes)))
+
+    shadow_eps = 1  # seconds
 
     def shadow(i):
         assert i in graph.nodes
@@ -192,15 +136,7 @@ def reduce_to_clique(problem: pd.Series, hash=None):
         # New node
         j = len(graph.nodes)
 
-        graph.add_node(j, **graph.nodes[i])
-
-        for (a, _, d) in graph.in_edges(i, data=True):
-            graph.add_edge(a, i, **d)
-
-        for (_, b, d) in graph.out_edges(i, data=True):
-            graph.add_edge(i, b, **d)
-
-        shadow_eps = 1  # seconds
+        graph.add_node(j, **graph.nodes[i], shadows=i)
 
         # Connect shadow node to parent
         graph.add_edge(i, j, **{'len': 0, EDGE_TTT_KEY: shadow_eps})
@@ -211,48 +147,37 @@ def reduce_to_clique(problem: pd.Series, hash=None):
     trips = trips.assign(ia=trips.ia.apply(shadow))
     trips = trips.assign(ib=trips.ib.apply(shadow))
 
+    # 4. All-to-all distance matrix
+
+    shadowed_node = nx.get_node_attributes(graph, name='shadows')
+    edge_ttt = nx.get_edge_attributes(graph, name=EDGE_TTT_KEY)
+
+    def dist(i, j):
+        (p, q) = (shadowed_node.get(i, i), shadowed_node.get(j, j))
+        d = (edge_ttt[(i, p)] if (i != p) and (i != j) else 0) + \
+            (edge_ttt[(q, j)] if (q != j) and (i != j) else 0) + \
+            (edge_ttt[(p, q)] if (p != q) else 0)
+        # log.debug(f"{i}->{j}: {d} / {nx.shortest_path_length(graph, i, j, weight=EDGE_TTT_KEY)}")
+        return d
+
+    time_mat = {i: {j: int(dist(i, j)) for j in graph.nodes} for i in graph.nodes}
+
+    # 5. Repackage
+
     problem = problem.copy()
     problem['graph'] = graph
     problem['trips'] = trips
     problem['original_node'] = nx.get_node_attributes(graph, name=parent_attr)
+    problem['time_mat'] = time_mat
 
     return problem
 
 
-@cache
-def get_problem_data(area: str, where: str, max_trips: int):
-    trips = pd.concat(axis=0, objs=[
-        get_raw_trips(table_name, where=where).assign(table_name=table_name)
-        for table_name in sorted(table_names)
-    ])
-
-    assert len(trips), \
-        f"Query returned zero trips. Maybe a misshappen `where`: \n{where}"
-
-    trips = trips[list(KEEP_COLS)].sort_values(by='ta')
-    trips = trips.assign(xa=list(zip(trips.xa_lat, trips.xa_lon)))
-    trips = trips.assign(xb=list(zip(trips.xb_lat, trips.xb_lon)))
-
-    graph = largest_component(load_graph(area))
-    trips = with_nearest_ingraph(trips, graph)
-
-    trips = attach_timewindows(trips)
-
-    trips = trips.head(max_trips)
-
-    log.debug(f"Trips: \n{trips.head(3).to_markdown()} \netc.")
-    log.info(f"Number of trips: {len(trips)}.")
-
-    # Simplify problem (subset in space-time)
-    trips = concentrated_subset(trips)
-
-    with plot_trajectories(graph, trips) as px:
-        px.f.savefig(out_dir / f"bare_trajectories.png")
-
-    return pd.Series({'area': area, 'table_names': table_names, 'graph': graph, 'trips': trips})
 
 
 def solve(problem: pd.Series, **params):
+    log.debug(f"`{(whatsmyname())}` is busy now...")
+
     graph: nx.DiGraph = problem.graph
     trips: pd.DataFrame = problem.trips
 
@@ -262,7 +187,7 @@ def solve(problem: pd.Series, **params):
     depot = 0
     capacities = [cap_vehicles] * num_vehicles
 
-    assert (graph.number_of_nodes() <= 1000), \
+    assert (graph.number_of_nodes() <= 10000), \
         f"The graph seems too large for this code."
 
     assert (depot in graph.nodes), \
@@ -277,25 +202,34 @@ def solve(problem: pd.Series, **params):
     assert 'n' in trips.columns, \
         f"Number of passengers 'n' not given."
 
-    time_mat = pd.DataFrame(nx.floyd_warshall_numpy(graph, weight=EDGE_TTT_KEY), index=graph.nodes, columns=graph.nodes)
+    # A briefer on variables in `ortools`
+    # https://developers.google.com/optimization/reference/constraint_solver/routing
 
     # Distance should be integers (ortools)
     # https://developers.google.com/optimization/routing/tsp
-    time_mat = time_mat.round().astype(int)
-
-    # Max time in seconds to reach any point on graph from the depot
-    time_radius = max(time_mat[depot])
+    if ('time_mat' in problem):
+        time_mat = problem['time_mat']
+    else:
+        with Section(f"`time_mat` dictionary not in `problem` => computing afresh.", out=log.warning):
+            time_mat = {
+                a: {b: int(nx.shortest_path_length(graph, a, b, weight=EDGE_TTT_KEY)) for b in graph.nodes}
+                for a in progressbar(graph.nodes)
+            }
 
     # Beginning of time
-    t0 = min(set(trips.ta)) - 2 * timedelta(seconds=time_radius)
-    rel_t = (lambda t: int((t - t0).total_seconds()))
+    T0 = min(set(trips.ta)) - params['time_buffer']
+    rel_t = (lambda t: int((t - T0).total_seconds()))
+
+    # Last timepoint of potential interest
+    # T1 = trips[['twa', 'twb']].applymap(np.max).max().max() + TIME_BUFFER
+    T1 = T0 + params['time_horizon']  # this seems to make it easier to generate solutions
 
     # ORTOOLS
 
     from ortools.constraint_solver.pywrapcp import RoutingIndexManager, RoutingModel
-    from ortools.constraint_solver.pywrapcp import DefaultRoutingSearchParameters
+    from ortools.constraint_solver.pywrapcp import DefaultRoutingSearchParameters, DefaultRoutingModelParameters, \
+        DefaultPhaseParameters
     from ortools.constraint_solver.pywrapcp import Assignment
-    from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy
 
     manager = RoutingIndexManager(graph.number_of_nodes(), num_vehicles, depot)
     routing = RoutingModel(manager)
@@ -303,7 +237,7 @@ def solve(problem: pd.Series, **params):
     # Travel time
 
     def time_callback(ja, jb):
-        return time_mat.loc[manager.IndexToNode(ja), manager.IndexToNode(jb)]
+        return time_mat[manager.IndexToNode(ja)][manager.IndexToNode(jb)]
         # return nx.shortest_path_length(graph, manager.IndexToNode(ja), manager.IndexToNode(jb), weight=EDGE_TTT_KEY)
 
     ix_transit_time = routing.RegisterTransitCallback(time_callback)
@@ -313,15 +247,15 @@ def solve(problem: pd.Series, **params):
         evaluator_index=ix_transit_time,
         name='travel_time',
         # allow waiting time:
-        slack_max=(60 * 10),
+        slack_max=int(params['max_vehicle_waiting_time'].total_seconds()),
         # vehicle maximum travel time:
-        capacity=(60 * 60 * 24),
+        capacity=int((T1 - T0).total_seconds()),
         # the start time is a window specified below
         fix_start_cumul_to_zero=False,
     )
 
     dim_travel_time = routing.GetDimensionOrDie('travel_time')
-    dim_travel_time.SetGlobalSpanCostCoefficient(100)
+    dim_travel_time.SetGlobalSpanCostCoefficient(params['span_cost_coeff_travel_time'])
 
     # Register all slack variables with the `assignment` -- ?
 
@@ -331,7 +265,7 @@ def solve(problem: pd.Series, **params):
     # Vehicle start time window
 
     for iv in range(num_vehicles):
-        dim_travel_time.CumulVar(routing.Start(iv)).SetRange(rel_t(t0), rel_t(t0 + timedelta(hours=3)))
+        dim_travel_time.CumulVar(routing.Start(iv)).SetRange(rel_t(T0), rel_t(T1))
         routing.AddToAssignment(dim_travel_time.SlackVar(routing.Start(iv)))
 
     for iv in range(num_vehicles):
@@ -351,6 +285,7 @@ def solve(problem: pd.Series, **params):
 
     for (_, trip) in trips.iterrows():
         (ja, jb) = map(manager.NodeToIndex, (trip.ia, trip.ib))
+        # log.debug(f"{t0}, {trip.twa}, {list(map(rel_t, trip.twa))}")
         dim_travel_time.CumulVar(ja).SetRange(*map(rel_t, trip.twa))  # pickup
         dim_travel_time.CumulVar(jb).SetRange(*map(rel_t, trip.twb))  # delivery
         routing.AddToAssignment(dim_travel_time.SlackVar(ja))
@@ -364,7 +299,7 @@ def solve(problem: pd.Series, **params):
             trips[['ib', 'n']].set_index('ib').n.reindex(graph.nodes).fillna(0).astype(int)
     )
 
-    log.debug(f"Demands: {demands.to_dict()}.")
+    # log.debug(f"Demands: {demands[demands != 0]}")
 
     def demand_callback(j):
         return demands[manager.IndexToNode(j)]
@@ -381,30 +316,39 @@ def solve(problem: pd.Series, **params):
         fix_start_cumul_to_zero=True,
     )
 
-    dim_capacity = routing.GetDimensionOrDie('vehicle_capacity')
-    dim_capacity.SetGlobalSpanCostCoefficient(0)
+    vehicle_capacity = routing.GetDimensionOrDie('vehicle_capacity')
+    vehicle_capacity.SetGlobalSpanCostCoefficient(params['span_cost_coeff_vehicle_capacity'])
 
     # Allow to drop nodes
 
-    penalty_unserviced = 10000  # TODO:?
+    penalty_unserviced = params['penalty_unserviced']
 
     for node in demands[demands != 0].index:
         routing.AddDisjunction([manager.NodeToIndex(node)], penalty_unserviced)
 
     # Initialize solver parameters
 
-    params = DefaultRoutingSearchParameters()
-    params.first_solution_strategy = FirstSolutionStrategy.PATH_CHEAPEST_ARC
-    params.time_limit.seconds = 60 * 30  # TODO
-    # params.solution_limit = 100  # TODO
+    # https://developers.google.com/optimization/reference/constraint_solver/routing
+    search_params = DefaultRoutingSearchParameters()
+    search_params.first_solution_strategy = params['first_solution_strategy']
+
+    # https://stackoverflow.com/questions/63600059/how-can-i-get-progress-log-on-google-or-tools
+    search_params.log_search = True
+
+    # search_params.routing_no_lns = True  # no such parameter
+    # search_params.routing_guided_local_search = True  # no such parameter
+    #
+    search_params.time_limit.seconds = int(params['solver_time_limit'])
+    search_params.solution_limit = params['solver_solution_limit']
 
     # Solve
 
     with Section("Running `ortools` solver", out=log.info):
-        assignment: Assignment = routing.SolveWithParameters(params)
+        assignment: Assignment = routing.SolveWithParameters(search_params)
 
     log.info(f"Assignment: {str(assignment)[0:40]}...")
-    log.info(f"Success: {routing.status() == OrStatus.SUCCESS}")
+    log.info(f"Routing status: {routing.status()}")
+    log.info(f"Solver success: {routing.status() == OrStatus.SUCCESS}")
 
     # Repackage the solution
 
@@ -426,7 +370,7 @@ def solve(problem: pd.Series, **params):
                 while True:
                     i = manager.IndexToNode(j)
                     slack = assignment.Value(dim_travel_time.SlackVar(j)) if routing.IsStart(j) else np.nan
-                    yield (i, j, assignment.Value(dim_capacity.CumulVar(j)), slack)
+                    yield (i, j, assignment.Value(vehicle_capacity.CumulVar(j)), slack)
                     if routing.IsEnd(j):
                         break
                     else:
@@ -435,8 +379,7 @@ def solve(problem: pd.Series, **params):
             route = pd.DataFrame(data=get_route_from(routing.Start(iv)), columns=['i', 'j', 'load', 'slack'])
 
             route = route.assign(cost=np.cumsum(
-                [0] +
-                [routing.GetArcCostForVehicle(*e, iv) for e in pairwise(route.i)]
+                [0] + [routing.GetArcCostForVehicle(*e, iv) for e in pairwise(route.i)]
             ))
 
             yield route
@@ -454,7 +397,7 @@ def solve(problem: pd.Series, **params):
 
     routes = [
         route.assign(est_time_arr=[
-            t0 + timedelta(seconds=1) * assignment.Value(dim_travel_time.CumulVar(j))
+            T0 + timedelta(seconds=1) * assignment.Value(dim_travel_time.CumulVar(j))
             for j in route.j
         ])
         for route in routes
@@ -467,7 +410,9 @@ def solve(problem: pd.Series, **params):
                 [
                     tb - timedelta(seconds=1) * nx.shortest_path_length(graph, a, b, weight=EDGE_TTT_KEY)
                     for ((a, b), (_, tb)) in zip(pairwise(route.i), pairwise(route.est_time_arr))
-                ] + [np.nan]
+                ] + [
+                    np.nan
+                ]
         ))
         for route in routes
     ]
@@ -488,147 +433,95 @@ def solve(problem: pd.Series, **params):
 
     # log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
 
+    # As one dataframe
+    routes = pd.concat([route.assign(iv=iv) for (iv, route) in enumerate(routes)])
+
     return (trips, routes)
 
 
+@cache
 def compute_all(**params):
-    problem_data_params = dict(area=params['area'], where=params['where'], max_trips=params['problem_data_max_trips'])
-    problem_data = get_problem_data(**problem_data_params)
+    problem_data = get_problem_data(**params['data'])
 
-    reduced_problem_data = reduce_to_clique(problem_data, hash=problem_data_params)
-    (trips, routes) = solve(reduced_problem_data, **params)
+    reduced_problem_data = reduce_to_clique(problem_data, hash=params['data'])
+    (trips, routes) = solve(reduced_problem_data, **params['fleet'], **params['optimization'], **params['search'])
 
     trips = trips.assign(ia=trips.ia.map(reduced_problem_data.original_node))
     trips = trips.assign(ib=trips.ib.map(reduced_problem_data.original_node))
 
-    routes = [
-        route.assign(i=route.i.map(reduced_problem_data.original_node))
-        for route in routes
-    ]
+    routes = routes.assign(i=routes.i.map(reduced_problem_data.original_node))
 
     log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
 
-    return (problem_data.graph, trips, routes)
+    return (trips, routes)
 
 
-def visualize(graph, trips, routes):
-    import plotly.graph_objects as go
-    import plotly.express as px
 
-    # log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
+def main(out_dir=None, plot=True, **params):
+    try:
+        if out_dir is None:
+            out_dir = mkdir(Path(__file__).with_suffix('') / f"{Now()}").resolve()
 
-    rng = np.random.default_rng(seed=43)
+        log.debug(f"{Path(__file__).name} output folder: {relpath(out_dir)}")
 
-    node_loc = pd.DataFrame(nx.get_node_attributes(graph, name='loc'), index=["lat", "lon"])
-    edge_lag = nx.get_edge_attributes(graph, name=EDGE_TTT_KEY)
+        with (out_dir / "params.json").open(mode='w') as fd:
+            print(json.dumps(params, indent=2, cls=JSONEncoder), file=fd)
 
-    fig = go.Figure()
+        globals.out_dir = out_dir
+        (trips, routes) = compute_all(**params)
 
-    for (i, trip) in trips.iterrows():
-        # color = rng.choice(px.colors.sequential.Plasma)
+        trips.to_csv(out_dir / "trips.tsv", sep='\t')
+        routes.to_csv(out_dir / "routes.tsv", sep='\t')
+    except:
+        log.exception(f"`main` solution failed.")
+        raise
 
-        # Pickup timewindow
-        fig.add_trace(
-            go.Scatter3d(
-                x=[trip.xa_lon] * 2,
-                y=[trip.xa_lat] * 2,
-                z=trip.twa,
-                # marker=dict(size=0),
-                line=dict(width=2, color="green"),
-                mode="lines",
-            ),
-        )
+    try:
+        plot and plot_all(trips, routes, **params)
+    except:
+        log.exception(f"`main` visualization failed.")
 
-        # Dropoff timewindow
-        fig.add_trace(
-            go.Scatter3d(
-                x=[trip.xb_lon] * 2,
-                y=[trip.xb_lat] * 2,
-                z=trip.twb,
-                # marker=dict(size=0),
-                line=dict(width=2, color="red"),
-                mode="lines",
-            ),
-        )
-
-        # Connect
-        if not pd.isna(trip.iv_ta) and not pd.isna(trip.iv_ta):
-            fig.add_trace(
-                go.Scatter3d(
-                    x=[trip.xa_lon, trip.xb_lon],
-                    y=[trip.xa_lat, trip.xb_lat],
-                    z=[trip.iv_ta, trip.iv_tb],
-                    # marker=dict(size=0),
-                    line=dict(width=1, color="green", dash="dash"),
-                    mode="lines",
-                ),
-            )
-
-        # fig.add_trace(
-        #     go.Scatter3d(
-        #         x=path.lon,
-        #         y=path.lat,
-        #         # z=path.lag,
-        #         z=(path.lag - t0).dt.total_seconds() / 60,
-        #         # marker=dict(size=0),
-        #         line=dict(width=1, color=color),
-        #         mode="lines",
-        #     ),
-        # )
-
-    for route in routes:
-        if max(route.load) == 0:
-            continue
-
-        color = rng.choice(["black", "blue", "brown", "magenta"])
-
-        log.debug(f"Route: \n{route.to_markdown()}")
-
-        for (uv, (ta, tb)) in zip(pairwise(route.i), pairwise(route.est_time_dep)):
-            path = nx.shortest_path(graph, *uv, weight=EDGE_TTT_KEY)
-            path = node_loc[list(path)].T
-            path = path.assign(
-                lag=(np.cumsum([ta] + [timedelta(seconds=1) * edge_lag[e] for e in pairwise(path.index)])))
-
-            fig.add_trace(
-                go.Scatter3d(
-                    x=path.lon,
-                    y=path.lat,
-                    z=path.lag,
-                    # marker=dict(size=0),
-                    line=dict(width=1, color=color),
-                    mode="lines",
-                ),
-            )
-
-    fig.update_layout(
-        showlegend=False,
-        scene=dict(
-            xaxis_title="lon",
-            yaxis_title="lat",
-            zaxis_title="",
-        ),
-    )
-
-    fig.write_html(str(out_dir / f"{whatsmyname()}.html"))
+    return locals()
 
 
-def main():
-    params = {
-        'area': AREA,
-        'problem_data_max_trips': 100,
-        'where': f"""
-            ('2016-05-01 18:00' <= ta) and (ta <= '2016-05-01 18:{TIME_WINDOW:02}')
-            and (passenger_count == 1)
-        """,
+def get_default_params():
+    return {
+        'data': {
+            'table_names': sorted({"green_tripdata_2016-05", "yellow_tripdata_2016-05"}),
+            'area': "manhattan",
+            'max_trips': 1000,
+            'sql_where': sql_string(f"""
+                ('2016-05-01 18:00' <= ta) and 
+                (tb <= '2016-05-01 19:00') and
+                (passenger_count == 1)
+            """),
+            'focal_point': (40.75798, -73.98550),  # Times Square
+            'focus_radius': 1000,  # meters
+        },
 
-        'num_vehicles': 10,
-        'cap_vehicles': 10,
+        'fleet': {
+            'num_vehicles': 10,
+            'cap_vehicles': 8,
+            'max_vehicle_waiting_time': timedelta(minutes=10),
+        },
+
+        'optimization': {
+            'penalty_unserviced': 10_000,  # seconds (presumably)
+            'span_cost_coeff_travel_time': 0,
+            'span_cost_coeff_vehicle_capacity': 0,
+        },
+
+        'search': {
+            # https://developers.google.com/optimization/routing/routing_options
+            'first_solution_strategy': FirstSolutionStrategy.PATH_MOST_CONSTRAINED_ARC,
+
+            'solver_time_limit': timedelta(minutes=10).total_seconds(),
+            'solver_solution_limit': 1000,
+            'time_buffer': timedelta(minutes=10),
+            'time_horizon': timedelta(days=10),
+        },
     }
-
-    (graph, trips, routes) = compute_all(**params)
-    visualize(graph, trips, routes)
 
 
 if __name__ == '__main__':
-    main()
+    main(**get_default_params())
