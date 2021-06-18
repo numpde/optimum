@@ -14,11 +14,7 @@ Working example
 https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/cvrptw.py
 """
 
-
-from z_sources import DATA, load_graph, EDGE_TTT_KEY
-
-
-import ortools
+from z_sources import EDGE_TTT_KEY, get_problem_data
 
 from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy
 
@@ -66,6 +62,7 @@ style = {rcParam.Font.size: 14}
 class globals:
     out_dir = None
 
+
 # https://developers.google.com/optimization/routing/routing_options
 class OrStatus:
     NOT_YET = 0
@@ -73,8 +70,6 @@ class OrStatus:
     FAIL_NOT_FOUND = 2
     FAIL_TIMEOUT = 3
     INVALID = 4
-
-
 
 
 @cache
@@ -171,8 +166,6 @@ def reduce_to_clique(problem: pd.Series, hash=None):
     problem['time_mat'] = time_mat
 
     return problem
-
-
 
 
 def solve(problem: pd.Series, **params):
@@ -456,7 +449,6 @@ def compute_all(**params):
     return (trips, routes)
 
 
-
 def main(out_dir=None, plot=True, **params):
     try:
         if out_dir is None:
@@ -475,11 +467,6 @@ def main(out_dir=None, plot=True, **params):
     except:
         log.exception(f"`main` solution failed.")
         raise
-
-    try:
-        plot and plot_all(trips, routes, **params)
-    except:
-        log.exception(f"`main` visualization failed.")
 
     return locals()
 
@@ -515,7 +502,7 @@ def get_default_params():
             # https://developers.google.com/optimization/routing/routing_options
             'first_solution_strategy': FirstSolutionStrategy.PATH_MOST_CONSTRAINED_ARC,
 
-            'solver_time_limit': timedelta(minutes=10).total_seconds(),
+            'solver_time_limit': timedelta(minutes=60).total_seconds(),
             'solver_solution_limit': 1000,
             'time_buffer': timedelta(minutes=10),
             'time_horizon': timedelta(days=10),
