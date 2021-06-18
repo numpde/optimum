@@ -1,9 +1,12 @@
 # RA, 2021-06-11
 
+import os
 import json
 import inspect
 import datetime
 import pathlib
+
+REPO = next(p for p in pathlib.Path(__file__).parents for p in p.glob("code")).parent.resolve()
 
 class Section:
     def __init__(self, desc, out=print):
@@ -22,8 +25,8 @@ class Section:
 class JSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime.timedelta):
-            return f"{obj.total_seconds()}"
+            return repr(obj)
         elif isinstance(obj, pathlib.Path):
-            return str(obj)
+            return str(obj.resolve().relative_to(REPO))
         else:
             return json.JSONEncoder.default(self, obj)
