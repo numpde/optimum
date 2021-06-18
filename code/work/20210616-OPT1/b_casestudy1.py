@@ -331,7 +331,7 @@ def solve(problem: pd.Series, **params):
     # search_params.routing_no_lns = True  # no such parameter
     # search_params.routing_guided_local_search = True  # no such parameter
     #
-    search_params.time_limit.seconds = int(params['solver_time_limit'])
+    search_params.time_limit.seconds = int(params['solver_time_limit'].total_seconds())
     search_params.solution_limit = params['solver_solution_limit']
 
     # Solve
@@ -419,7 +419,7 @@ def solve(problem: pd.Series, **params):
             for (iv, route) in enumerate(routes):
                 if trip.ia in set(route.i):
                     route = route.loc[unlist1(route[route.i == trip.ia].index):]
-                    log.debug(f"\n{route.head(3)}")
+                    # log.debug(f"\n{route.head(3)}")
                     trips.loc[i, 'iv'] = iv
                     trips.loc[i, 'iv_ta'] = first(route.est_time_dep)
                     trips.loc[i, 'iv_tb'] = route.est_time_arr[unlist1(route[route.i == trip.ib].index)]
@@ -444,7 +444,7 @@ def compute_all(**params):
 
     routes = routes.assign(i=routes.i.map(reduced_problem_data.original_node))
 
-    log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
+    # log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
 
     return (trips, routes)
 
@@ -502,7 +502,7 @@ def get_default_params():
             # https://developers.google.com/optimization/routing/routing_options
             'first_solution_strategy': FirstSolutionStrategy.PATH_MOST_CONSTRAINED_ARC,
 
-            'solver_time_limit': timedelta(minutes=60).total_seconds(),
+            'solver_time_limit': timedelta(minutes=60),
             'solver_solution_limit': 1000,
             'time_buffer': timedelta(minutes=10),
             'time_horizon': timedelta(days=10),
