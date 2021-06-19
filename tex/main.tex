@@ -177,7 +177,7 @@ approximate locations of pickup and dropoff.
 Based on those data
 we give a partial answer to the question
 \begin{quote}
-	How many small buses could serve the same demand?
+	How many small buses could service the same demand?
 \end{quote}
 
 %
@@ -478,11 +478,23 @@ see Fig.~\ref{f:case1-hist}.
 %
 
 The vehicle load over time is shown in Fig.~\ref{f:case1-load},
-indicating that the fleet runs at about half the capacity.
+indicating that the minibus fleet runs at about half the capacity.
 %
 Since all $n = 100$ pickup requests are from the first \SI{17}{min} only,
 it would be able to handle more requests per minute
 if operating over an extended period.
+
+%
+
+In summary,
+we estimate that this demand can be serviced by 
+\begin{itemize}
+\item 
+	$N \approx 20$ single-passenger taxis; or
+\item
+	$N \approx 10$ minibuses of capacity $C \approx 8$,
+	if some excess travel time is allowed.
+\end{itemize}
 
 \TODO{more on this?}
 
@@ -548,6 +560,11 @@ if operating over an extended period.
 	\caption{%
 		Load of each vehicle over time
 		($n = 100$ requests for $N = 10$ vehicles).
+		%
+		The time begins at $\sim$17:50 
+		when the fleet is released 
+		from the fictitious depot
+		at Times Square.
 		%
 		See \S\ref{s:case1}.
 	}
