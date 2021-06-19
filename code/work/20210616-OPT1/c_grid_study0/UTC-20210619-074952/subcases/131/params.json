@@ -1,0 +1,33 @@
+{
+  "data": {
+    "table_names": [
+      "green_tripdata_2016-05",
+      "yellow_tripdata_2016-05"
+    ],
+    "area": "manhattan",
+    "max_trips": 10,
+    "sql_where": "('2016-05-01 18:00' <= ta) and (tb <= '2016-05-01 19:00') and (passenger_count == 1)",
+    "focal_point": [
+      40.75798,
+      -73.9855
+    ],
+    "focus_radius": 1000
+  },
+  "fleet": {
+    "num_vehicles": 20,
+    "cap_vehicles": 8,
+    "max_vehicle_waiting_time": "datetime.timedelta(seconds=600)"
+  },
+  "optimization": {
+    "penalty_unserviced": 10000,
+    "span_cost_coeff_travel_time": 0,
+    "span_cost_coeff_vehicle_capacity": 0
+  },
+  "search": {
+    "first_solution_strategy": 4,
+    "solver_time_limit": "datetime.timedelta(seconds=3600)",
+    "solver_solution_limit": 1000,
+    "time_buffer": "datetime.timedelta(seconds=600)",
+    "time_horizon": "datetime.timedelta(days=10)"
+  }
+}
