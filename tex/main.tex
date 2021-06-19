@@ -443,22 +443,129 @@ Thus, we believe our results remain informative.
 
 \section{Case study} \label{s:case}
 
-\subsection{Times Square}
+\subsection{Times Square} \label{s:case1}
 
-
-%
-%
 We take%
 \marginnote{\CODE{code/work/20210616-OPT1}}
-all single-passenger trips with pickup and dropoff 
-within $R = \SI{1}{km}$
-of Times Square
-that 
-are reported to start and end
-within 18:00--19:00 on May 1, 2016.
+the first $n$ single-passenger trips 
+with
+reported pickup and dropoff 
+within
+$R = \SI{1}{km}$ of Times Square
+and
+within 
+18:00--19:00 on May 1, 2016.
+%
+%
+Allowing $n = 400$ requests
+is a little difficult to solve ($\sim$\SI{1}{h} $\times$ \SI{2}{Gflop/s}),
+so we focus here on
+\begin{quote}
+	$n = 100$ requests
+	for
+	$N = 10$ vehicles of capacity $C = 1$ or $C = 8$
+	.
+\end{quote}
+
 %
 
+We find that the single-passenger fleet ($C = 1$)
+can only service about a half of requests,
+whilst
+the fleet of minibuses ($C = 8$) can handle most requests,
+see Fig.~\ref{f:case1-hist}.
 
+%
+
+The vehicle load over time is shown in Fig.~\ref{f:case1-load},
+indicating that it runs at about half the capacity.
+%
+Since all $n = 100$ pickup requests are from the first \SI{17}{min} only,
+the fleet would be able to handle more requests per minute
+if operating over an extended period.
+
+\TODO{more on this?}
+
+\begin{figure}[!p]
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/104/excess_travel_time_traj}
+		\caption{Vehicle capacity $C = 1$.}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/105/excess_travel_time_traj}
+		\caption{Vehicle capacity $C = 8$.}
+	\end{subfigure}
+	
+	
+	\caption{%
+		Passenger trip trajectories
+		colored by excess travel time
+		w.r.t.~quickest route
+		($n = 100$ requests for $N = 10$ vehicles).
+		%
+		%
+		Empty red circles are unserviced requests.
+		%
+		See \S\ref{s:case1}.
+	}
+	%
+	\label{f:case1-traj}
+	
+	\vspace{2\baselineskip}
+	
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/104/excess_travel_time_hist}
+		\caption{Vehicle capacity $C = 1$.}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/105/excess_travel_time_hist}
+		
+		\caption{Vehicle capacity $C = 8$.}
+	\end{subfigure}
+	
+	\caption{%
+		Histogram of excess travel time
+		w.r.t.~quickest route
+		($n = 100$ requests for $N = 10$ vehicles).
+		%
+		See \S\ref{s:case1}.
+	}
+	%
+	\label{f:case1-hist}
+
+	\vspace{2\baselineskip}
+	
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/104/vehicle_load}
+		\caption{Vehicle capacity $C = 1$.}
+	\end{subfigure}
+	\begin{subfigure}{0.5\textwidth}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/105/vehicle_load}
+		
+		\caption{Vehicle capacity $C = 8$.}
+	\end{subfigure}
+	
+	\caption{%
+		Load of each vehicle over time
+		($n = 100$ requests for $N = 10$ vehicles).
+		%
+		See \S\ref{s:case1}.
+	}
+	%
+	\label{f:case1-load}
+\end{figure}
+
+
+
+
+
+\TODO{another case study?}
+
+
+
+\section{Conclusions}
+
+\TODO{drop the mic}
 
 
 %%% BIBLIOGRAPHY %%%
@@ -468,8 +575,6 @@ within 18:00--19:00 on May 1, 2016.
 \printbibliography % biblatex
 
 
-
-\clearpage
 
 
 \section{Appendix}
@@ -481,7 +586,8 @@ within 18:00--19:00 on May 1, 2016.
 \end{center}
 
 
-\clearpage\SHOWTODOS
+\subsection{TODOs} 
+\SHOWTODOS
 
 
 

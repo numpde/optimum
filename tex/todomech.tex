@@ -19,16 +19,11 @@
 		{\textrm{\color{red}TODO(\arabic{todoindex}): #1}}%
 	}%
 }
-\newcommand\CHECK[1]{%
-	\ADDTODO{CHECK CLAIM: {#1}}%
-	{\color{toverify}#1}%
-	\smash{\marginnote{\text{\color{red}*}}}%
-}
 \newcounter{indextodo}
 \newcommand{\SHOWTODOS}{%
 	\setcounter{indextodo}{0}%
 	\begin{enumerate}
-	\item[{\color{red} TODOs:}]
+	\item[] \vspace{-\baselineskip}
 	\whiledo{\value{indextodo} < \value{todoindex}}{%
 		\addtocounter{indextodo}{1}%
 		\item[\color{red}\arabic{indextodo}.]
