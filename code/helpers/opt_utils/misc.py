@@ -5,6 +5,7 @@ import json
 import inspect
 import datetime
 import pathlib
+import time
 
 REPO = next(p for p in pathlib.Path(__file__).parents for p in p.glob("code")).parent.resolve()
 
@@ -15,6 +16,7 @@ class Section:
 
     def __enter__(self):
         self.out and self.out(f"<{self.desc}>")
+        time.sleep(1)
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
