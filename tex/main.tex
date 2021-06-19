@@ -177,7 +177,7 @@ approximate locations of pickup and dropoff.
 Based on those data
 we give a partial answer to the question
 \begin{quote}
-	How many small buses could service the same demand?
+	How many minibuses could service the same demand?
 \end{quote}
 
 %
@@ -271,9 +271,8 @@ See Fig.~\ref{f:nyctlc} for a net summary.
 
 We obtained the road network for Manhattan
 \marginnote{\CODE{code/data/20210611-OSM/a_osm_download.py}}%
-from the OpenStreetMap Overpass API%
-\footnote{\href{https://wiki.openstreetmap.org/wiki/Overpass_API}{\texttt{https://wiki.openstreetmap.org/wiki/Overpass_API}}}
-%
+from the OpenStreetMap Overpass API
+%\footnote{\href{https://wiki.openstreetmap.org/wiki/Overpass_API}{\texttt{https://wiki.openstreetmap.org/wiki/Overpass_API}}}
 and filtered for roads that can plausibly sustain public traffic.
 %
 \marginnote{\CODE{code/data/20210611-OSM/c_road_graph.py}}
@@ -284,15 +283,18 @@ there are one-way roads
 and
 the routing $A \to B$ differs from $B \to A$.
 %
+Edges are broken into bits under \SI{20}{m}.
+%
 %
 When modeling individual trips,
 their reported pickup and dropoff locations
 are snapped to the nearest node of the road graph;
 we ignore about 10\% of the trips 
 where the discrepancy is over \SI{20}{m}.
-
 %
-
+%
+%
+%
 The map graphics are from MapBox.
 \marginnote{\CODE{code/helpers/opt_maps/maps.py}}
 
@@ -451,7 +453,7 @@ the first $n$ single-passenger trips
 with
 reported pickup and dropoff 
 within
-$R = \SI{1}{km}$ of Times Square
+$\SI{1}{km}$ of Times Square
 and
 within 
 18:00--19:00 on May 1, 2016.
@@ -472,17 +474,16 @@ so we focus here on
 We find that the single-passenger fleet ($C = 1$)
 can only service about a half of requests,
 whilst
-the fleet of minibuses ($C = 8$) can handle most requests,
+the minibuses fleet ($C = 8$) can handle most requests,
 see Fig.~\ref{f:case1-hist}.
 
 %
 
-The vehicle load over time is shown in Fig.~\ref{f:case1-load},
-indicating that the minibus fleet runs at about half the capacity.
+The minibus fleet runs at about half the capacity on average, see Fig.~\ref{f:case1-load}.
 %
-Since all $n = 100$ pickup requests are from the first \SI{17}{min} only,
+Since all $n = 100$ pickup requests are from the first \SI{17}{min},
 it would be able to handle more requests per minute
-if operating over an extended period.
+when operating over an extended period.
 
 %
 
@@ -495,6 +496,10 @@ we estimate that this demand can be serviced by
 	$N \approx 10$ minibuses of capacity $C \approx 8$,
 	if some excess travel time is allowed.
 \end{itemize}
+
+%
+
+
 
 \TODO{more on this?}
 
@@ -510,15 +515,15 @@ we estimate that this demand can be serviced by
 	
 	
 	\caption{%
-		Passenger trip trajectories
+		Passenger trajectories
 		colored by excess travel time
-		w.r.t.~quickest route
+		w.r.t.~the quickest route
 		($n = 100$ requests for $N = 10$ vehicles).
 		%
 		%
-		Empty red circles are unserviced requests.
+		Empty red circles are unserviced pickup requests.
 		%
-		See \S\ref{s:case1}.
+		Cf.~\S\ref{s:case1}.
 	}
 	%
 	\label{f:case1-traj}
@@ -537,7 +542,7 @@ we estimate that this demand can be serviced by
 	
 	\caption{%
 		Histogram of excess travel time
-		w.r.t.~quickest route
+		w.r.t.~the quickest route
 		($n = 100$ requests for $N = 10$ vehicles).
 		%
 		See \S\ref{s:case1}.
