@@ -40,7 +40,7 @@ cache.clear(maxage=(60 * 60 * 24))
 
 sql_string = First(str.split).then(' '.join)
 
-style = {rcParam.Font.size: 14}
+style = {rcParam.Font.size: 14, rcParam.Text.usetex: True}
 
 
 def paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY):
@@ -55,41 +55,59 @@ def paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY):
         yield path
 
 
-
 @contextlib.contextmanager
-def bare_trajectories(graph, trips: pd.DataFrame, routes: pd.DataFrame, edge_weight=EDGE_TTT_KEY, **kwargs) -> Plox:
-    # with GraphPathDist(graph, edge_weight=edge_weight) as gpd:
-    #     trajectories = list(map(gpd.path_only, zip(trips.ia, trips.ib)))
-
-    nodes = pd.DataFrame(data=nx.get_node_attributes(graph, "loc"), index=["lat", "lon"]).T
-
+def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, edge_weight=EDGE_TTT_KEY,
+                            **kwargs) -> Plox:
     routes = {
         iv: pd.concat(axis=0, objs=list(paths_of_route(route, graph, edge_weight=edge_weight)))
         for (iv, route) in routes.groupby(by='iv')
     }
 
+    edge_lag = nx.get_edge_attributes(graph, name=edge_weight)
+
     rng = np.random.default_rng(seed=43)
 
     with Plox() as px:
+        extent = maps.ax4(list(trips.xa_lat) + list(trips.xb_lat), list(trips.xa_lon) + list(trips.xb_lon),
+                          extra_space=0.5)
+
+        px.a.imshow(maps.get_map_by_bbox(maps.ax2mb(*extent)), extent=extent, interpolation='quadric', zorder=-100)
+        px.a.axis("off")
+
+        px.a.set_xlim(extent[0:2])
+        px.a.set_ylim(extent[2:4])
+
+        import matplotlib.cm
+        import matplotlib.colors as mcolors
+        cmap = mcolors.LinearSegmentedColormap.from_list('annoyance',
+                                                         ["darkblue", "darkgreen", "darkorange", "darkred"])
+
+        norm = mcolors.Normalize(vmin=0, vmax=15)
+        sm = matplotlib.cm.ScalarMappable(norm=norm, cmap=cmap)
+        sm.set_clim(norm.vmin, norm.vmax)
+
+        from matplotlib.transforms import Bbox
+        ((x0, y0), (x1, y1)) = px.a.get_position().get_points()
+        cax = px.f.add_axes(Bbox(((x0 + 0.01, y1 - 0.07), (x0 + (x1 - x0) * 0.5, y1 - 0.05))))
+        cax.set_title("Excess travel time, min")
+        ticks = range[int(norm.vmin), int(norm.vmax) - 1]
+        cb = px.f.colorbar(mappable=sm, cax=cax, orientation='horizontal', ticks=ticks, )
+        cb.ax.tick_params(labelsize='x-small')
+
         for (_, trip) in trips.iterrows():
             if not pd.isna(trip.iv):
                 route = routes[trip.iv]
-                route = route[(trip.iv_ta <= route.lag) & (route.lag <= trip.iv_tb)]
-                px.a.plot(route.lon + rng.uniform(0, 1e-3), route.lag + rng.uniform(0, 1e-3), alpha=0.7, lw=0.3)
+                route = route[(trip.iv_ta < route.lag) & (route.lag <= trip.iv_tb)]
 
-        #     px.a.plot(*nodes.loc[list(traj), ['lon', 'lat']].values.T, alpha=0.7, lw=0.3)
+                short_len = nx.shortest_path_length(graph, trip.ia, trip.ib, weight=edge_weight)
+                route_len = sum(((e[0] != e[1]) and edge_lag[e]) for e in pairwise(route.index))
+                c = sm.to_rgba((route_len - short_len) / 60)
 
-        # # extent = maps.ax4(nodes.lat, nodes.lon)
-        # extent = maps.ax4(list(trips.xa_lat) + list(trips.xb_lat), list(trips.xa_lon) + list(trips.xb_lon))
-        #
-        # px.a.imshow(maps.get_map_by_bbox(maps.ax2mb(*extent)), extent=extent, interpolation='quadric', zorder=-100)
-        # px.a.axis("off")
-        #
-        # px.a.set_xlim(extent[0:2])
-        # px.a.set_ylim(extent[2:4])
-
-        px.show()
-        exit()
+                (dx, dy) = rng.uniform(0, 0.0005, size=2)
+                px.a.plot(route.lon + dx, route.lat + dy, alpha=0.5, lw=0.5, c=c)
+            else:
+                px.a.scatter(trip.xa_lon, trip.xa_lat, zorder=1000,
+                             alpha=0.8, s=10, marker="o", facecolor="darkred", edgecolor='none',)
 
         yield px
 
@@ -158,7 +176,7 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
 
         # log.debug(f"Route: \n{route.to_markdown()}")
 
-        path = pd.concat(axis=0, objs=paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY))
+        path = pd.concat(axis=0, objs=list(paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY)))
 
         path = path[path.lag <= t_max]
 
@@ -186,7 +204,7 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
 
 
 @contextlib.contextmanager
-def excess_trip_durations(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.DataFrame, **kwargs):
+def excess_travel_time_hist(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.DataFrame, **kwargs):
     unserviced = np.sum(trips.iv_ta.isna())
     trips = trips[~trips.iv_ta.isna()]
     ref = trips.duration * timedelta(seconds=1)
@@ -200,7 +218,7 @@ def excess_trip_durations(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.Dat
 
         m = 15
         px.a.hist(data, bins=m, range=[0, 15], color="C0")
-        px.a.set_xlabel("Excess trip duration, min")
+        px.a.set_xlabel("Excess travel time, min")
         px.a.set_ylabel("Number of passengers")
         # px.a.set_yticklabels(px.a.get_yticklabels(), fontsize="small")
         px.a.tick_params(axis='y', labelsize="x-small")
@@ -266,8 +284,8 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
     alles = {'graph': graph, 'trips': trips, 'routes': routes}
 
     ff = [
-        bare_trajectories,
-        excess_trip_durations,
+        excess_travel_time_traj,
+        excess_travel_time_hist,
         vehicle_load,
     ]
 
