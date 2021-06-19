@@ -5,7 +5,7 @@
       "yellow_tripdata_2016-05"
     ],
     "area": "manhattan",
-    "max_trips": 10,
+    "max_trips": 100,
     "sql_where": "('2016-05-01 18:00' <= ta) and (tb <= '2016-05-01 19:00') and (passenger_count == 1)",
     "focal_point": [
       40.75798,
@@ -15,7 +15,7 @@
   },
   "fleet": {
     "num_vehicles": 10,
-    "cap_vehicles": 1,
+    "cap_vehicles": 8,
     "max_vehicle_waiting_time": "600.0"
   },
   "optimization": {
@@ -26,7 +26,7 @@
   "search": {
     "first_solution_strategy": 4,
     "solver_time_limit": 600.0,
-    "solver_solution_limit": 1,
+    "solver_solution_limit": 1000,
     "time_buffer": "600.0",
     "time_horizon": "864000.0"
   }
