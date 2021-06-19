@@ -8,7 +8,6 @@ import logging
 
 log.parent.handlers[0].setLevel(logging.DEBUG)
 
-from typing import List
 import contextlib
 from pathlib import Path
 from datetime import timedelta, datetime
@@ -21,21 +20,17 @@ import networkx as nx
 import json
 import percache
 
-from tqdm import tqdm as progressbar
-
-from geopy.distance import distance as geodistance
 from inclusive import range
+
+from matplotlib.ticker import MaxNLocator
 
 from tcga.utils import unlist1, relpath, mkdir, first, Now, whatsmyname, First
 from plox import Plox, rcParam
 
 from opt_maps import maps
 from opt_utils.graph import largest_component, GraphNearestNode, GraphPathDist
-from opt_utils.misc import Section, JSONEncoder
 
 from z_sources import get_problem_data
-
-# from opt_trips.trips import get_raw_trips, KEEP_COLS, with_nearest_ingraph, with_shortest_distance
 
 BASE = Path(__file__).parent
 DATA = next(p for p in BASE.parents for p in p.glob("**/model")).resolve()
@@ -48,39 +43,65 @@ sql_string = First(str.split).then(' '.join)
 style = {rcParam.Font.size: 14}
 
 
+def paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY):
+    node_loc = pd.DataFrame(nx.get_node_attributes(graph, name='loc'), index=["lat", "lon"])
+    edge_lag = nx.get_edge_attributes(graph, name=edge_weight)
+
+    for (uv, (ta, tb)) in zip(pairwise(route.i), pairwise(route.est_time_dep)):
+        path = nx.shortest_path(graph, *uv, weight=edge_weight)
+        path = node_loc[list(path)].T
+        path = path.assign(lag=(np.cumsum([ta] + [timedelta(seconds=1) * edge_lag[e] for e in pairwise(path.index)])))
+
+        yield path
+
+
+
 @contextlib.contextmanager
-def plot_trajectories(graph, trips, edge_weight=EDGE_TTT_KEY) -> Plox:
-    with GraphPathDist(graph, edge_weight=edge_weight) as gpd:
-        trajectories = list(map(gpd.path_only, zip(trips.ia, trips.ib)))
+def bare_trajectories(graph, trips: pd.DataFrame, routes: pd.DataFrame, edge_weight=EDGE_TTT_KEY, **kwargs) -> Plox:
+    # with GraphPathDist(graph, edge_weight=edge_weight) as gpd:
+    #     trajectories = list(map(gpd.path_only, zip(trips.ia, trips.ib)))
 
     nodes = pd.DataFrame(data=nx.get_node_attributes(graph, "loc"), index=["lat", "lon"]).T
 
+    routes = {
+        iv: pd.concat(axis=0, objs=list(paths_of_route(route, graph, edge_weight=edge_weight)))
+        for (iv, route) in routes.groupby(by='iv')
+    }
+
+    rng = np.random.default_rng(seed=43)
+
     with Plox() as px:
-        extent = maps.ax4(nodes.lat, nodes.lon)
+        for (_, trip) in trips.iterrows():
+            if not pd.isna(trip.iv):
+                route = routes[trip.iv]
+                route = route[(trip.iv_ta <= route.lag) & (route.lag <= trip.iv_tb)]
+                px.a.plot(route.lon + rng.uniform(0, 1e-3), route.lag + rng.uniform(0, 1e-3), alpha=0.7, lw=0.3)
 
-        px.a.imshow(maps.get_map_by_bbox(maps.ax2mb(*extent)), extent=extent, interpolation='quadric', zorder=-100)
-        px.a.axis("off")
+        #     px.a.plot(*nodes.loc[list(traj), ['lon', 'lat']].values.T, alpha=0.7, lw=0.3)
 
-        px.a.set_xlim(extent[0:2])
-        px.a.set_ylim(extent[2:4])
+        # # extent = maps.ax4(nodes.lat, nodes.lon)
+        # extent = maps.ax4(list(trips.xa_lat) + list(trips.xb_lat), list(trips.xa_lon) + list(trips.xb_lon))
+        #
+        # px.a.imshow(maps.get_map_by_bbox(maps.ax2mb(*extent)), extent=extent, interpolation='quadric', zorder=-100)
+        # px.a.axis("off")
+        #
+        # px.a.set_xlim(extent[0:2])
+        # px.a.set_ylim(extent[2:4])
 
-        for traj in trajectories:
-            px.a.plot(*nodes.loc[list(traj), ['lon', 'lat']].values.T, alpha=0.7, lw=0.3)
+        px.show()
+        exit()
 
         yield px
 
 
 @contextlib.contextmanager
-def visualize3d(graph, trips, routes: pd.DataFrame):
+def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
     import plotly.graph_objects as go
     import plotly.express as px
 
     # log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
 
     rng = np.random.default_rng(seed=43)
-
-    node_loc = pd.DataFrame(nx.get_node_attributes(graph, name='loc'), index=["lat", "lon"])
-    edge_lag = nx.get_edge_attributes(graph, name=EDGE_TTT_KEY)
 
     fig = go.Figure()
 
@@ -137,26 +158,20 @@ def visualize3d(graph, trips, routes: pd.DataFrame):
 
         # log.debug(f"Route: \n{route.to_markdown()}")
 
-        for (uv, (ta, tb)) in zip(pairwise(route.i), pairwise(route.est_time_dep)):
-            if (ta >= t_max):
-                continue
+        path = pd.concat(axis=0, objs=paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY))
 
-            path = nx.shortest_path(graph, *uv, weight=EDGE_TTT_KEY)
-            path = node_loc[list(path)].T
-            path = path.assign(
-                lag=(np.cumsum([ta] + [timedelta(seconds=1) * edge_lag[e] for e in pairwise(path.index)]))
-            )
+        path = path[path.lag <= t_max]
 
-            fig.add_trace(
-                go.Scatter3d(
-                    x=path.lon,
-                    y=path.lat,
-                    z=ztime(path.lag),
-                    # marker=dict(size=0),
-                    line=dict(width=0.6, color=color),
-                    mode="lines",
-                ),
-            )
+        fig.add_trace(
+            go.Scatter3d(
+                x=path.lon,
+                y=path.lat,
+                z=ztime(path.lag),
+                # marker=dict(size=0),
+                line=dict(width=0.6, color=color),
+                mode="lines",
+            ),
+        )
 
     fig.update_layout(
         showlegend=False,
@@ -171,7 +186,7 @@ def visualize3d(graph, trips, routes: pd.DataFrame):
 
 
 @contextlib.contextmanager
-def excess_trip_durations(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.DataFrame):
+def excess_trip_durations(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.DataFrame, **kwargs):
     unserviced = np.sum(trips.iv_ta.isna())
     trips = trips[~trips.iv_ta.isna()]
     ref = trips.duration * timedelta(seconds=1)
@@ -190,6 +205,7 @@ def excess_trip_durations(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.Dat
         # px.a.set_yticklabels(px.a.get_yticklabels(), fontsize="small")
         px.a.tick_params(axis='y', labelsize="x-small")
         px.a.grid(True, zorder=-1000, linewidth=0.1)
+        px.a.yaxis.set_major_locator(MaxNLocator(integer=True))
 
         px.a.bar(x=[m + 1], height=[np.sum(data > m)], color="C2")
         px.a.bar(x=[m + 2], height=[unserviced], color="C3")
@@ -204,10 +220,10 @@ def excess_trip_durations(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.Dat
 
 
 @contextlib.contextmanager
-def vehicle_load(routes: pd.DataFrame):
+def vehicle_load(routes: pd.DataFrame, **kwargs):
     rng = np.random.default_rng(seed=43)
 
-    with Plox(style) as px:
+    with Plox({**style, rcParam.Figure.figsize: (8, 3)}) as px:
         for (iv, route) in routes.groupby(by='iv'):
             if any(route.load):
                 route = route.reset_index()
@@ -216,7 +232,9 @@ def vehicle_load(routes: pd.DataFrame):
                 route = route[route.est_time_arr <= tb + timedelta(minutes=5)]
                 time = route.est_time_arr
                 route.load += 0.02 * (route.load != 0) * rng.uniform(-1, 1, size=len(route.load))
-                px.a.step((time - min(time)).dt.total_seconds() / 60, route.load, '.--', where='post', lw=2)
+                px.a.step((time - min(time)).dt.total_seconds() / 60, route.load, '-', where='post', lw=2)
+
+        px.a.yaxis.set_major_locator(MaxNLocator(integer=True))
 
         px.a.set_xlabel("Time offset, min")
         px.a.set_ylabel("Vehicle load")
@@ -224,43 +242,53 @@ def vehicle_load(routes: pd.DataFrame):
         yield px
 
 
-def plot_all(path: Path):
-    log.info(f"Plotting in {relpath(path)}.")
+def plot_all(path_src: Path, path_dst=None, skip_existing=True):
+    path_dst = path_dst or mkdir(path_src / "plots")
 
-    with unlist1(path.glob("params.json")).open(mode='r') as fd:
+    log.info(f"Plotting {relpath(path_src)} -> {relpath(path_dst)}")
+
+    with unlist1(path_src.glob("params.json")).open(mode='r') as fd:
         params = json.load(fd)
 
-    with unlist1(path.glob("routes.tsv")).open(mode='r') as fd:
+    with unlist1(path_src.glob("routes.tsv")).open(mode='r') as fd:
         routes = pd.read_table(fd, parse_dates=['est_time_arr', 'est_time_dep'])
 
-    with unlist1(path.glob("trips.tsv")).open(mode='r') as fd:
+    with unlist1(path_src.glob("trips.tsv")).open(mode='r') as fd:
         trips = pd.read_table(fd, parse_dates=['ta', 'tb', 'iv_ta', 'iv_tb'])
 
-    from pandas import Timestamp
+    # noinspection PyUnresolvedReferences
+    from pandas import Timestamp  # required for `eval`
     trips.twa = list(map(eval, trips.twa))
     trips.twb = list(map(eval, trips.twb))
 
-    graph = cache(get_problem_data)(**params['data']).graph
+    graph = (cache(get_problem_data)(**params['data'])).graph
 
-    out_dir = mkdir(path / "plots")
+    alles = {'graph': graph, 'trips': trips, 'routes': routes}
 
-    with excess_trip_durations(graph, trips, routes) as px:
-        px.f.savefig(out_dir / f"excess_trip_durations.png")
+    ff = [
+        bare_trajectories,
+        excess_trip_durations,
+        vehicle_load,
+    ]
 
-    return
+    for f in ff:
+        out_fig = path_dst / f"{f.__name__}.png"
+        if skip_existing and out_fig.is_file():
+            log.info(f"{relpath(out_fig)} exists, skipping.")
+        else:
+            log.info(f"Making {relpath(out_fig)}...")
+            with f(**alles) as px:
+                px.f.savefig(out_fig)
 
-    with vehicle_load(routes) as px:
-        px.f.savefig(out_dir / f"vehicle_load.png")
-
-    with plot_trajectories(graph, trips) as px:
-        px.f.savefig(out_dir / f"bare_trajectories.png")
-
-    with visualize3d(graph, trips, routes) as fig:
-        fig.write_html(str(out_dir / f"visualize3d.html"))
+    # with visualize3d(**alles) as fig:
+    #     fig.write_html(str(out_dir / f"visualize3d.html"))
 
 
 def main():
-    plot_all(unlist1(Path(__file__).with_suffix('').glob("sample_data")))
+    path = unlist1(Path(__file__).with_suffix('').glob("sample_data"))
+
+    for subcase in path.glob("*cases/*"):
+        plot_all(path_src=subcase, path_dst=mkdir(path / f"plots/{subcase.name}"), skip_existing=False)
 
 
 if __name__ == '__main__':
