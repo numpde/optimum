@@ -92,11 +92,11 @@ def mb2ax(left, bottom, right, top):
     return (left, right, bottom, top)
 
 
-def ax4(lat, lon, extra_space=0.01):
+def ax4(lats, lons, extra_space=0.01):
     extent = np.dot(
         [
-            [min(lon), max(lon)],
-            [min(lat), max(lat)],
+            [min(lons), max(lons)],
+            [min(lats), max(lats)],
         ],
         (
             lambda s:
