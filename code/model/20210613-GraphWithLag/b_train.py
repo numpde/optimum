@@ -47,7 +47,7 @@ assert not (EDGE_TTT_KEY == 'len'), "This doesn't make sense."
 PRIOR_VEL = 5  # m/s
 
 # Hour of the day to focus on (e.g. 18)
-HOUR = 18
+HOUR = 6
 
 out_dir = mkdir((Path(__file__).with_suffix('') / f"{VERSION}/{EDGE_TTT_KEY}/H={HOUR}/{Now()}").resolve())
 
