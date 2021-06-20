@@ -40,7 +40,7 @@ cache.clear(maxage=(60 * 60 * 24))
 
 sql_string = First(str.split).then(' '.join)
 
-style = {rcParam.Font.size: 14, rcParam.Text.usetex: True}
+style = {rcParam.Font.size: 16, rcParam.Text.usetex: True}
 
 
 def paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY):
@@ -69,7 +69,7 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
 
     with Plox() as px:
         extent = maps.ax4(list(trips.xa_lat) + list(trips.xb_lat), list(trips.xa_lon) + list(trips.xb_lon),
-                          extra_space=0.5)
+                          extra_space=0.35)
 
         px.a.imshow(maps.get_map_by_bbox(maps.ax2mb(*extent)), extent=extent, interpolation='quadric', zorder=-100)
         px.a.axis("off")
@@ -102,12 +102,16 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
                 short_len = nx.shortest_path_length(graph, trip.ia, trip.ib, weight=edge_weight)
                 route_len = sum(((e[0] != e[1]) and edge_lag[e]) for e in pairwise(route.index))
                 c = sm.to_rgba((route_len - short_len) / 60)
+                s = 10
 
                 (dx, dy) = rng.uniform(0, 0.0005, size=2)
                 px.a.plot(route.lon + dx, route.lat + dy, alpha=0.5, lw=0.5, c=c)
+
+                px.a.scatter(trip.xa_lon, trip.xa_lat, zorder=1000, alpha=0.8, s=s, facecolor=c, edgecolor='none')
             else:
-                px.a.scatter(trip.xa_lon, trip.xa_lat, zorder=1000,
-                             alpha=0.8, s=10, marker="o", facecolor="darkred", edgecolor='none',)
+                c = "red"
+                s = 18
+                px.a.scatter(trip.xa_lon, trip.xa_lat, zorder=1000, alpha=0.8, s=s, facecolor='none', edgecolor=c)
 
         yield px
 
@@ -221,7 +225,7 @@ def excess_travel_time_hist(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.D
         px.a.set_xlabel("Excess travel time, min")
         px.a.set_ylabel("Number of passengers")
         # px.a.set_yticklabels(px.a.get_yticklabels(), fontsize="small")
-        px.a.tick_params(axis='y', labelsize="x-small")
+        px.a.tick_params(axis='y', labelsize="large")
         px.a.grid(True, zorder=-1000, linewidth=0.1)
         px.a.yaxis.set_major_locator(MaxNLocator(integer=True))
 
@@ -229,7 +233,7 @@ def excess_travel_time_hist(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.D
         px.a.bar(x=[m + 2], height=[unserviced], color="C3")
         px.a.set_xticks(list(range[0, m]) + [m + 1, m + 2])
         px.a.set_xticklabels(list(str(i) for i in range[0, m]) + [f"..."] + ["oo"])
-        px.a.tick_params(axis='x', labelsize="x-small")
+        px.a.tick_params(axis='x', labelsize="large")
 
         # px.a.set_yscale('log')
         # px.a.set_yticks(range(int(max(px.a.get_yticks()))))
