@@ -200,9 +200,9 @@ The number in the margin refers to the corresponding code listed in \S\ref{s:cod
 \label{s:trips}
 
 We focus henceforth on May 2016
-where 
+with
 $\sim$12M (Yellow) and $\sim$1.5M (Green)
-trip records are available.
+trip records.
 %
 The $\sim$11M ``for-hire vehicle'' records
 bear no useful details for our purpose.
@@ -230,7 +230,7 @@ See Fig.~\ref{f:nyctlc} for a net summary.
 		\hfill
 		\includegraphics[width=0.49\textwidth]{20210610-NYCTLC/e_explore/trip_distance_histogram/green_tripdata_2016-05}
 	
-		\caption{Reported trip distance histogram.}
+		\caption{Histogram of the reported trip distance (between 0.1 and \SI{30}{miles}). }
 		\label{f:nyctlc-disthist}
 	\end{subfigure}
 	
@@ -328,8 +328,8 @@ This is repeated.
 %
 %
 
-The adaptive routes we calculate below
-are the quickest trajectories
+Henceforth, ``quickest''
+means
 w.r.t.~this traffic model.
 
 
@@ -407,11 +407,9 @@ a so-called vehicle routing problem with these main attributes:
 
 %
 
-This is difficult in general.
-%
 We use \texttt{ortools}%
 \footnote{\href{https://developers.google.com/optimization/routing/vrp}{https://developers.google.com/optimization/routing/vrp}}
-to find reasonable solutions computationally.
+to find reasonable solutions computationally (on modest hardware).
 %
 We can roughly assess optimality
 by allotting more time to the solver.
@@ -422,12 +420,10 @@ by allotting more time to the solver.
 
 %
 
-To obtain reasonable solutions
-on modest hardware
-we focus on a small slice of 
+We focus on a small slice of 
 the trip data at a time,
 i.e.~%
-a few hundred passengers $\times$ one hour $\times$ a few square kilometers.
+a few hundred passengers $\times$ \SI{1}{h} $\times$ a few square \si{km}.
 %
 We then compare ``customer satisfaction''
 across different fleet sizes $N$ and bus capacities $C$.
@@ -476,7 +472,7 @@ so we focus here on
 We find that the single-passenger fleet ($C = 1$)
 can only service about a half of requests,
 whilst
-the minibuses fleet ($C = 8$) can handle most requests,
+the minibuse fleet ($C = 8$) can handle most requests:
 see Fig.~\ref{f:case1-hist}.
 
 %
