@@ -1,0 +1,11 @@
+{
+  "query": {
+    "weekday": 3,
+    "limit": 1000000,
+    "radius": 1000
+  },
+  "trips": 0,
+  "min_trip_speed": 0.1,
+  "max_trip_speed": 15.5,
+  "max_trip_duration_minutes": 30
+}
