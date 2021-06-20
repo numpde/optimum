@@ -58,6 +58,9 @@ def get_road_graph(area):
 
 def get_raw_trips(table_name, where="", order="random()", limit=11111) -> pd.DataFrame:
     with Section("Querying trips", out=log.debug):
+        if (set(str(limit)) == {'1'}):
+            log.warning(f"Suspicious limit: {limit}.")
+
         sql = " ".join([
             f"SELECT * FROM [{table_name}]",
             f"WHERE    ({where}) " if where else "",
