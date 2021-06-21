@@ -439,22 +439,34 @@ def solve(problem: pd.Series, **params):
     return (trips, routes)
 
 
+def attach_shortest(trips, graph):
+    trips = trips.assign(quickest_time=trips.apply(axis=1, func=(
+        lambda trip: nx.shortest_path_length(graph, trip.ia, trip.ib, weight=EDGE_TTT_KEY)
+    )))
+
+    trips = trips.assign(quickest_path=trips.apply(axis=1, func=(
+        lambda trip: tuple(nx.shortest_path(graph, trip.ia, trip.ib, weight=EDGE_TTT_KEY))
+    )))
+
+    return trips
+
 
 @cache
 def compute_all(**params):
     problem_data = get_problem_data(**params['data'])
-
     problem_data = postprocess_problem_data(problem_data, **params['data_post'])
 
-    reduced_problem_data = reduce_to_clique(problem_data, hash={**params['data'], **params['data_post']})
+    data_hash = {**params['data'], **params['data_post']}
+
+    problem_data.trips = attach_shortest(problem_data.trips, problem_data.graph)
+
+    reduced_problem_data = reduce_to_clique(problem_data, hash=data_hash)
     (trips, routes) = solve(reduced_problem_data, **params['fleet'], **params['optimization'], **params['search'])
 
     trips = trips.assign(ia=trips.ia.map(reduced_problem_data.original_node))
     trips = trips.assign(ib=trips.ib.map(reduced_problem_data.original_node))
 
     routes = routes.assign(i=routes.i.map(reduced_problem_data.original_node))
-
-    # log.info(f"Solution: \n{trips.sort_values(by=['iv', 'iv_ta']).to_markdown()}")
 
     return (trips, routes)
 

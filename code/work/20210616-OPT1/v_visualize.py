@@ -100,7 +100,7 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
                 route = route[(trip.iv_ta < route.lag) & (route.lag <= trip.iv_tb)]
 
                 short_len = nx.shortest_path_length(graph, trip.ia, trip.ib, weight=edge_weight)
-                route_len = sum(((e[0] != e[1]) and edge_lag[e]) for e in pairwise(route.index))
+                route_len = sum(((e[0] != e[1]) and edge_lag.get(e, np.nan)) for e in pairwise(route.index))
                 c = sm.to_rgba((route_len - short_len) / 60)
                 s = 10
 

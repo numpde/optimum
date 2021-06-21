@@ -44,7 +44,7 @@ def run_all():
             for (k, v) in sorted(locals().items()) if not k.startswith('.')
         }
         for repetition in [1, 2, 3, 4, 5]
-        for sample_trip_seed in [repetition]
+        for sample_trip_seed in [10 + repetition]
 
         for bustakers_fraction in [1.0, 0.8, 0.6, 0.4, 0.2]
 
