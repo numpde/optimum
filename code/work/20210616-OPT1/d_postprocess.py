@@ -106,7 +106,7 @@ def attach_predictions(src_dir: Path, grid: pd.DataFrame):
 
 
 def main():
-    runs = sorted(Path(__file__).parent.glob("c_grid_study1/*/param_grid.tsv"))
+    runs = sorted(Path(__file__).parent.glob("c_grid_study*/*/param_grid.tsv"))
 
     options = {str(i): run for (i, run) in enumerate(runs)}
 
@@ -134,14 +134,16 @@ def main():
         grid = pd.read_table(param_grid_file, index_col=0)
 
         try:
-            grid = attach_stuff(param_grid_file.parent, grid)
-        except:
-            log.exception(f"`attach_stuff` failed.")
-
-        try:
             grid = attach_predictions(param_grid_file.parent, grid)
         except:
             log.exception(f"`attach_predictions` failed.")
+
+        grid.to_csv(param_grid_file.with_suffix('.extended.tsv'), sep='\t')
+
+        try:
+            grid = attach_stuff(param_grid_file.parent, grid)
+        except:
+            log.exception(f"`attach_stuff` failed.")
 
         table = grid.to_html(classes="display", table_id="data", border=1, index=False, escape=False)
         html = datatable_html(table)

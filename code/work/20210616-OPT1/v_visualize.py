@@ -99,6 +99,8 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
                 route = routes[trip.iv]
                 route = route[(trip.iv_ta < route.lag) & (route.lag <= trip.iv_tb)]
 
+                # TODO: why some edges are missing?
+
                 short_len = nx.shortest_path_length(graph, trip.ia, trip.ib, weight=edge_weight)
                 route_len = sum(((e[0] != e[1]) and edge_lag.get(e, np.nan)) for e in pairwise(route.index))
                 c = sm.to_rgba((route_len - short_len) / 60)

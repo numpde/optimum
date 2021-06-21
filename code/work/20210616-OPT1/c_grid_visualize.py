@@ -11,8 +11,6 @@ from tcga.utils import relpath, unlist1, mkdir
 
 from opt_utils.misc import Section
 from v_visualize import plot_all
-from opt_utils.misc import datatable_html
-
 
 
 def main():
@@ -37,10 +35,6 @@ def main():
         grid = pd.read_table(param_grid_file, index_col=0)
         index_html = (param_grid_file.parent / "index.html")
 
-        if index_html.is_file():
-            log.info(f"Found {relpath(index_html)}. Continuing anyway.")
-            sleep(3)
-
         with Section(f"Writing plots for {relpath(param_grid_file)}", out=log.info):
             try:
                 for (i, row) in grid.iterrows():
@@ -52,15 +46,6 @@ def main():
             except:
                 log.exception(f"Some plots failed. Continuing...")
                 sleep(3)
-
-        # with Section(f"Writing html index to {relpath(index_html)}", out=log.info):
-        #     grid = attach_stuff(param_grid_file.parent, grid)
-        #
-        #     table = grid.to_html(classes="display", table_id="data", border=1, index=False, escape=False)
-        #     html = datatable_html(table)
-        #
-        #     with index_html.open(mode='w') as fd:
-        #         print(html, file=fd)
 
 
 if __name__ == '__main__':
