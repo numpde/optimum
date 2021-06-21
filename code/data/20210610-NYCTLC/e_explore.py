@@ -36,7 +36,7 @@ from opt_utils.style import default_style, name2color, name2cmap
 BASE = Path(__file__).parent.resolve()
 out_dir = Path(__file__).with_suffix('')
 
-cache = percache.Cache(str(mkdir(Path(__file__).with_suffix('')) / "percache"), livesync=True)
+cache = percache.Cache(str(mkdir(Path(__file__).with_suffix('')) / "percache.dat"), livesync=True)
 
 
 def QUERY(sql) -> pd.DataFrame:
