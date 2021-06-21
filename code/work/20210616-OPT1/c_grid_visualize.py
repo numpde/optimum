@@ -26,7 +26,7 @@ thead input {{ width: 50px; }}
 </style>
 </head><body>
 <p>
-For an exact-match column search use regex, e.g.: ^100$
+For an exact-match column search use regex, e.g. <b>^100$</b> or <b>10|20</b>
 </p>
 
 {table}
