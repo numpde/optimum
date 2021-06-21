@@ -37,14 +37,18 @@ $(document).ready(function() {
     $('#data thead tr').clone(true).appendTo( '#data thead' );
     $('#data thead tr:eq(1) th').each( function (i) {
         var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" />' );
+        $(this).html('<input type="text" placeholder="Search ' + title + '" />');
  
         $('input', this).on('keyup change', function () {
             if (table.column(i).search() !== this.value) {
                 // https://stackoverflow.com/questions/44003585/datatables-column-search-for-exact-match
                 table.column(i).search(this.value, true, false).draw();
             }
-        } );
+        });
+        
+        $('#data > thead > tr > th').css({'width': '100px'});
+        $('#data input').css({'width': '100%'});
+        $('#data').css({'width': '100%'});
     } );
  
     var table = $('#data').DataTable({
@@ -84,15 +88,19 @@ def render_index_html(path: Path, grid: pd.DataFrame):
 
         etc_links = pd.DataFrame(index=grid.index, data=[
             {
-                'subcase': ', '.join([
-                    f"<a href='{f}'>{Path(f).stem}</a>"
-                    for f in [str(f.resolve().relative_to(path)) for f in sorted(path.glob(f"*cases/{i}/*.*"))]
-                ])
+                'subcase': (
+                    f"#{i}: " +
+                    ", ".join([
+                        f"<a href='{f}'>{Path(f).stem}</a>"
+                        for f in [str(f.resolve().relative_to(path)) for f in sorted(path.glob(f"*cases/{i}/*.*"))]
+                    ])
+                )
             }
             for i in grid.index
         ])
 
         grid = pd.concat([grid, more_info, img_links, etc_links], axis=1)
+        # grid = grid.reset_index()
         table = grid.to_html(classes="display", table_id="data", border=1, index=False, escape=False)
         html = index_template.replace("{table}", table)
 
