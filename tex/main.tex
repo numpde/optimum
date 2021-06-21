@@ -449,10 +449,12 @@ Thus, we believe our results remain informative.
 
 \section{Case study} \label{s:case}
 
-\subsection{Times Square} \label{s:case1}
+\subsection[Times Square]{Times Square\marginpar{\smash{\CODE{code/work/20210616-OPT1}}}}
+\label{s:case1}
 
-We take%
-\marginnote{\CODE{code/work/20210616-OPT1}}
+\edef\caseone{\thecodeindex}
+
+We take
 the first $n$ single-passenger trips 
 with
 reported pickup and dropoff 
@@ -462,7 +464,7 @@ and
 within 
 18:00--19:00 on May 1, 2016.
 %
-%
+%	
 Allowing $n = 400$ requests
 is already a little difficult to solve ($\sim$\SI{1}{h} $\times$ \SI{2}{Gflop/s}),
 so we focus here on
@@ -478,8 +480,12 @@ so we focus here on
 We find that the single-passenger fleet ($C = 1$)
 can only service about a half of requests,
 whilst
-the minibuse fleet ($C = 8$) can handle most requests:
+the minibus fleet ($C = 8$) can handle most requests:
 see Fig.~\ref{f:case1-hist}.
+%
+%
+The results for $\SI{2}{km}$ radius with $N = 20$ 
+vehicles are similar (see code \#\caseone\xspace to browse the results).
 
 %
 
@@ -504,16 +510,15 @@ we estimate that this demand can be serviced by
 %
 
 
-
 \TODO{more on this?}
 
 \begin{figure}[!p]
 	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/104/excess_travel_time_traj}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-20210619-074952/plots/8/excess_travel_time_traj}
 		\caption{Vehicle capacity $C = 1$.}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/105/excess_travel_time_traj}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-20210619-074952/plots/9/excess_travel_time_traj}
 		\caption{Vehicle capacity $C = 8$.}
 	\end{subfigure}
 	
@@ -535,11 +540,11 @@ we estimate that this demand can be serviced by
 	\vspace{2\baselineskip}
 	
 	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/104/excess_travel_time_hist}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-20210619-074952/plots/8/excess_travel_time_hist}
 		\caption{Vehicle capacity $C = 1$.}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/105/excess_travel_time_hist}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-20210619-074952/plots/9/excess_travel_time_hist}
 		
 		\caption{Vehicle capacity $C = 8$.}
 	\end{subfigure}
@@ -559,11 +564,11 @@ we estimate that this demand can be serviced by
 	\vspace{2\baselineskip}
 	
 	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/104/vehicle_load}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-20210619-074952/plots/8/vehicle_load}
 		\caption{Vehicle capacity $C = 1$.}
 	\end{subfigure}
 	\begin{subfigure}{0.5\textwidth}
-		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-00000000-Sample/plots/105/vehicle_load}
+		\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study0/UTC-20210619-074952/plots/9/vehicle_load}
 		
 		\caption{Vehicle capacity $C = 8$.}
 	\end{subfigure}
