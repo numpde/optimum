@@ -1,0 +1,1150 @@
+[D][20210621 19:48:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/0
+[D][20210621 19:48:18 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 19:48:19 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 19:48:19 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 19:48:20 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 19:48:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 19:48:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 19:48:23 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 19:48:28 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 19:48:36 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 9653 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 5195 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 1655 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 19:48:36 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=1.0.>
+[I][20210621 19:48:37 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+100 trips left.
+[D][20210621 19:48:37 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 19:48:37 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 19:49:20 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 19:49:20 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 19:56:30 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 19:56:30 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 19:56:30 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 19:56:30 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [200, 205, 227, 270, 272, 300, 305, 327, 370, 372].
+[D][20210621 19:56:32 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/1
+[D][20210621 19:56:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 19:56:33 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 19:56:33 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 19:56:34 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 19:56:35 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 19:56:35 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 19:56:37 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 19:56:41 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 19:56:50 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 1145 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 1278 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 2814 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 19:56:50 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.8.>
+[I][20210621 19:56:51 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+80 trips left.
+[D][20210621 19:56:51 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 19:56:51 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 19:57:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 19:57:25 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:01:31 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (150) | travel_t...
+[I][20210621 20:01:31 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:01:31 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:01:31 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [155, 165, 170, 192, 196, 198, 206, 208, 235, 245, 250, 272, 276, 278, 286, 288].
+[D][20210621 20:01:32 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/2
+[D][20210621 20:01:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:01:33 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:01:33 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:01:34 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:01:35 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:01:35 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:01:37 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:01:41 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:01:49 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|       | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|------:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+|  2312 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+|  9448 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 10240 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:01:49 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.6.>
+[I][20210621 20:01:50 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+60 trips left.
+[D][20210621 20:01:50 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:01:50 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:02:17 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:02:17 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:05:07 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:05:07 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:05:07 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:05:07 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [113, 119, 124, 139, 161, 173, 179, 184, 199, 221].
+[D][20210621 20:05:07 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/3
+[D][20210621 20:05:07 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:05:08 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:05:08 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:05:09 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:05:11 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:05:11 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:05:12 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:05:17 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:05:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 3878 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 7387 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+|  347 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:05:25 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.4.>
+[I][20210621 20:05:26 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+40 trips left.
+[D][20210621 20:05:26 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:05:26 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:05:45 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:05:45 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:06:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:06:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:06:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:06:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [78, 89, 99, 104, 118, 129, 139, 144].
+[D][20210621 20:06:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/4
+[D][20210621 20:06:22 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:06:23 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:06:23 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:06:24 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:06:26 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:06:26 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:06:27 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:06:32 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:06:40 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 5726 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 4529 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 2523 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:06:40 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.2.>
+[I][20210621 20:06:41 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+20 trips left.
+[D][20210621 20:06:41 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:06:41 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:06:51 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:06:51 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:06:55 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:06:55 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:06:55 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:06:55 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [47, 52, 67, 72].
+[D][20210621 20:06:55 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/5
+[D][20210621 20:06:55 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:06:56 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:06:56 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:06:57 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:06:58 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:06:58 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:07:00 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:07:05 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:07:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 5790 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 6072 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 2607 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:07:13 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=1.0.>
+[I][20210621 20:07:14 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+100 trips left.
+[D][20210621 20:07:14 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:07:14 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:07:57 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:07:57 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:11:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:11:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:11:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:11:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [203, 240, 303, 340].
+[D][20210621 20:12:00 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/6
+[D][20210621 20:12:00 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:12:01 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:12:01 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:12:02 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:12:03 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:12:03 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:12:05 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:12:09 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:12:17 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+|  222 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 6329 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 6765 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:12:17 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.8.>
+[I][20210621 20:12:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+80 trips left.
+[D][20210621 20:12:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:12:18 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:12:54 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:12:54 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:17:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:17:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:17:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:17:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [151, 166, 181, 194, 208, 212, 222, 231, 246, 261, 274, 288, 292, 302].
+[D][20210621 20:17:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/7
+[D][20210621 20:17:13 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:17:14 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:17:14 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:17:15 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:17:17 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:17:17 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:17:19 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:17:23 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:17:33 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 8263 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 9062 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 4411 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:17:33 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.6.>
+[I][20210621 20:17:34 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+60 trips left.
+[D][20210621 20:17:34 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:17:34 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:18:03 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:18:03 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:20:14 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:20:14 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:20:14 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:20:14 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [116, 132, 142, 147, 160, 176, 192, 202, 207, 220].
+[D][20210621 20:20:15 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/8
+[D][20210621 20:20:15 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:20:16 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:20:16 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:20:17 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:20:19 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:20:19 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:20:20 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:20:25 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:20:35 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+|  909 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 3345 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 5123 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:20:35 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.4.>
+[I][20210621 20:20:36 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+40 trips left.
+[D][20210621 20:20:36 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:20:36 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:20:56 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:20:56 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:21:24 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:21:24 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:21:24 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:21:24 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [96, 101, 136, 141].
+[D][20210621 20:21:24 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/9
+[D][20210621 20:21:24 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:21:25 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:21:25 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:21:26 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:21:28 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:21:28 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:21:30 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:21:34 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:21:45 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 5593 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+|  904 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+|  574 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:21:45 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.2.>
+[I][20210621 20:21:46 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+20 trips left.
+[D][20210621 20:21:46 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:21:46 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:21:57 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:21:57 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:22:00 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:22:00 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:22:00 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:22:00 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [].
+[D][20210621 20:22:00 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/10
+[D][20210621 20:22:00 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:22:01 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:22:01 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:22:02 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:22:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:22:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:22:06 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:22:11 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:22:21 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 2324 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 7112 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 4384 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:22:21 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=1.0.>
+[I][20210621 20:22:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+100 trips left.
+[D][20210621 20:22:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:22:22 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:23:14 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:23:15 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:29:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (341) | travel_t...
+[I][20210621 20:29:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:29:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:29:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [199, 268, 299, 368].
+[D][20210621 20:29:02 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/11
+[D][20210621 20:29:02 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:29:03 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:29:03 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:29:04 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:29:06 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:29:06 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:29:08 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:29:12 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:29:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 6831 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+|  550 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 6131 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:29:22 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.8.>
+[I][20210621 20:29:23 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+80 trips left.
+[D][20210621 20:29:23 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:29:23 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:30:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:30:01 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:34:44 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (304) | travel_t...
+[I][20210621 20:34:44 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:34:44 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:34:44 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [164, 173, 192, 200, 244, 253, 272, 280].
+[D][20210621 20:34:45 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/12
+[D][20210621 20:34:45 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:34:46 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:34:46 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:34:47 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:34:49 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:34:49 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:34:52 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:34:57 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:35:08 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 8883 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 9103 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 3663 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:35:08 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.6.>
+[I][20210621 20:35:09 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+60 trips left.
+[D][20210621 20:35:09 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:35:09 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:35:45 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:35:45 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:37:56 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:37:56 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:37:56 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:37:56 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [131, 136, 140, 153, 159, 191, 196, 200, 213, 219].
+[D][20210621 20:37:57 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/13
+[D][20210621 20:37:57 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:37:58 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:37:58 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:37:59 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:38:00 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:38:00 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:38:02 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:38:07 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:38:15 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 9155 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 7589 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 4097 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:38:15 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.4.>
+[I][20210621 20:38:16 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+40 trips left.
+[D][20210621 20:38:17 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:38:17 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:38:36 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:38:36 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:38:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:38:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:38:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:38:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [93, 96, 102, 115, 133, 136, 142, 155].
+[D][20210621 20:38:59 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/14
+[D][20210621 20:38:59 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:39:00 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:39:00 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:39:01 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:39:03 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:39:03 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:39:04 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:39:09 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:39:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 5529 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 9001 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 2711 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:39:18 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.2.>
+[I][20210621 20:39:19 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+20 trips left.
+[D][20210621 20:39:20 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:39:20 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:39:30 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:39:31 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:39:33 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:39:33 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:39:33 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:39:33 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [].
+[D][20210621 20:39:33 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/15
+[D][20210621 20:39:33 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:39:34 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:39:34 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:39:35 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:39:36 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:39:36 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:39:38 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:39:43 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:39:51 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 4527 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 4026 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 5199 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:39:51 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=1.0.>
+[I][20210621 20:39:52 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+100 trips left.
+[D][20210621 20:39:52 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:39:52 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:40:36 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:40:36 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:47:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:47:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:47:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:47:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [224, 256, 324, 356].
+[D][20210621 20:47:06 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/16
+[D][20210621 20:47:06 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:47:07 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:47:07 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:47:08 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:47:10 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:47:10 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:47:12 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:47:16 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:47:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 2725 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 6136 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 7089 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:47:25 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.8.>
+[I][20210621 20:47:26 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+80 trips left.
+[D][20210621 20:47:26 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:47:26 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:48:02 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:48:02 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:51:47 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:51:47 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:51:47 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:51:47 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [151, 161, 164, 168, 187, 193, 226, 231, 241, 244, 248, 267, 273, 306].
+[D][20210621 20:51:47 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/17
+[D][20210621 20:51:47 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:51:48 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:51:48 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:51:49 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:51:51 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:51:51 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:51:52 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:51:57 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:52:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 3073 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 3946 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 8936 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:52:05 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.6.>
+[I][20210621 20:52:07 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+60 trips left.
+[D][20210621 20:52:07 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:52:07 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:52:34 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:52:34 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:54:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:54:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:54:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:54:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [118, 126, 133, 137, 152, 178, 186, 193, 197, 212].
+[D][20210621 20:54:26 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/18
+[D][20210621 20:54:26 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:54:27 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:54:27 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:54:28 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:54:29 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:54:29 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:54:31 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:54:36 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:54:45 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 7818 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 2021 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 7834 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:54:45 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.4.>
+[I][20210621 20:54:46 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+40 trips left.
+[D][20210621 20:54:47 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:54:47 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:55:06 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:55:06 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:55:46 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:55:46 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:55:46 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:55:46 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [82, 92, 95, 99, 103, 118, 122, 132, 135, 139, 143, 158].
+[D][20210621 20:55:46 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/19
+[D][20210621 20:55:46 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:55:47 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:55:47 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:55:48 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:55:49 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:55:49 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:55:51 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:55:55 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:56:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 9987 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 3073 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 3011 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:56:04 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.2.>
+[I][20210621 20:56:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+20 trips left.
+[D][20210621 20:56:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:56:05 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:56:15 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:56:15 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 20:56:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 20:56:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 20:56:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 20:56:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [54, 74].
+[D][20210621 20:56:19 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/20
+[D][20210621 20:56:19 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:56:20 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:56:20 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 20:56:21 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 20:56:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 20:56:22 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 20:56:24 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 20:56:28 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 20:56:37 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 4419 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+|  751 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 4172 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 20:56:37 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=1.0.>
+[I][20210621 20:56:38 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+100 trips left.
+[D][20210621 20:56:39 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 20:56:39 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 20:57:24 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 20:57:24 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 21:03:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 21:03:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 21:03:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 21:03:13 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [202, 215, 302, 315].
+[D][20210621 21:03:14 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/21
+[D][20210621 21:03:14 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 21:03:15 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 21:03:15 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 21:03:16 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 21:03:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 21:03:18 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 21:03:19 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 21:03:24 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 21:03:32 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 7957 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 7918 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 2004 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 21:03:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.8.>
+[I][20210621 21:03:33 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+80 trips left.
+[D][20210621 21:03:33 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 21:03:33 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 21:04:08 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 21:04:08 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 21:07:43 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 21:07:43 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 21:07:43 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 21:07:43 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [146, 165, 169, 171, 178, 181, 189, 212, 226, 245, 249, 251, 258, 261, 269, 292].
+[D][20210621 21:07:44 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/22
+[D][20210621 21:07:44 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 21:07:45 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 21:07:45 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 21:07:46 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 21:07:47 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 21:07:47 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 21:07:49 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 21:07:54 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 21:08:03 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+|   26 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 7943 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 4730 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 21:08:03 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.6.>
+[I][20210621 21:08:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+60 trips left.
+[D][20210621 21:08:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 21:08:04 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 21:08:32 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 21:08:32 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 21:10:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 21:10:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 21:10:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 21:10:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [116, 128, 131, 132, 141, 151, 153, 176, 188, 191, 192, 201, 211, 213].
+[D][20210621 21:10:01 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/23
+[D][20210621 21:10:01 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 21:10:02 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 21:10:03 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 21:10:04 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 21:10:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 21:10:05 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 21:10:07 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 21:10:11 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 21:10:20 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 8950 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 2515 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 1838 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 21:10:20 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.4.>
+[I][20210621 21:10:21 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+40 trips left.
+[D][20210621 21:10:21 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 21:10:21 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 21:10:40 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 21:10:40 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 21:11:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 21:11:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 21:11:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 21:11:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [96, 99, 100, 109, 136, 139, 140, 149].
+[D][20210621 21:11:04 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][main:485]
+b_casestudent.py output folder: c_grid_study1/UTC-20210621-174818/subcases/24
+[D][20210621 21:11:04 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 21:11:05 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 21:11:05 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<get_raw_trips: Querying trips>
+[W][20210621 21:11:06 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][get_raw_trips:66]
+Suspicious limit: 11111.
+[D][20210621 21:11:08 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:65]
+Raw query returned 10800 trips.
+[D][20210621 21:11:08 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][load_graph:27]
+Graph file: ../../model/20210613-GraphWithLag/b_train/v1/lag/H=18/UTC-20210615-132827/manhattan.pkl
+[D][20210621 21:11:09 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<with_nearest_ingraph: Computing nearest in-graph nodes>
+[D][20210621 21:11:14 CEST][/home/ra/repos/optimum/code/helpers/opt_trips/trips.py][MainThread][MainProcess][with_nearest_ingraph:96]
+Keep 9585, drop 1215.
+[I][20210621 21:11:24 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/z_sources.py][MainThread][MainProcess][get_problem_data:81]
+Filtered down to 100 trips: 
+|      | ta                  | tb                  |   xa_lon |   xa_lat |   xb_lon |   xb_lat |   n |   distance |   duration | table_name              | xa                                      | xb                                      |   ia |         ib | twa                                                                  | twb                                                                  |
+|-----:|:--------------------|:--------------------|---------:|---------:|---------:|---------:|----:|-----------:|-----------:|:------------------------|:----------------------------------------|:----------------------------------------|-----:|-----------:|:---------------------------------------------------------------------|:---------------------------------------------------------------------|
+| 2814 | 2016-05-01 18:00:03 | 2016-05-01 18:10:08 | -73.9871 |  40.7609 | -73.9912 |  40.7502 |   1 |   1432.31  |        605 | yellow_tripdata_2016-05 | (40.7608528137207, -73.98712921142578)  | (40.750244140625, -73.99124145507811)   | 6775 | 5235625496 | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:05:03')) | (Timestamp('2016-05-01 17:58:03'), Timestamp('2016-05-01 18:20:08')) |
+| 4288 | 2016-05-01 18:00:23 | 2016-05-01 18:05:40 | -73.9846 |  40.7594 | -73.99   |  40.7519 |   1 |    965.604 |        317 | yellow_tripdata_2016-05 | (40.75941848754882, -73.98455047607422) | (40.75188064575195, -73.98995971679686) | 9499 |       9416 | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:05:23')) | (Timestamp('2016-05-01 17:58:23'), Timestamp('2016-05-01 18:15:40')) |
+| 1889 | 2016-05-01 18:00:27 | 2016-05-01 18:08:42 | -73.9816 |  40.7579 | -73.9927 |  40.7581 |   1 |   1593.25  |        495 | yellow_tripdata_2016-05 | (40.757930755615234, -73.9815673828125) | (40.75814056396485, -73.99272918701173) | 3558 |       7877 | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:05:27')) | (Timestamp('2016-05-01 17:58:27'), Timestamp('2016-05-01 18:18:42')) | 
+etc...
+[I][20210621 21:11:24 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<postprocess_problem_data: Subsampling trips with frac=0.2.>
+[I][20210621 21:11:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][postprocess_problem_data:450]
+20 trips left.
+[D][20210621 21:11:25 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][reduce_to_clique:76]
+`reduce_to_clique` is busy now...
+[D][20210621 21:11:25 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<reduce_to_clique: Computing all-to-all distances>
+[D][20210621 21:11:36 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:171]
+`solve` is busy now...
+[I][20210621 21:11:36 CEST][/home/ra/repos/optimum/code/helpers/opt_utils/misc.py][MainThread][MainProcess][__enter__:21]
+<solve: Running `ortools` solver>
+[I][20210621 21:11:38 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:349]
+Assignment: Assignment(travel_time0 (0) | travel_tim...
+[I][20210621 21:11:38 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:350]
+Routing status: 1
+[I][20210621 21:11:38 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:351]
+Solver success: True
+[I][20210621 21:11:38 CEST][/home/ra/repos/optimum/code/work/20210616-OPT1/b_casestudent.py][MainThread][MainProcess][solve:365]
+Unserviced nodes: [].

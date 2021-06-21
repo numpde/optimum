@@ -19,10 +19,10 @@ from opt_trips.trips import get_raw_trips, KEEP_COLS, with_nearest_ingraph
 
 DATA = next(p for p in Path(__file__).parents for p in p.glob("**/model")).resolve()
 
-graph_source = max(DATA.glob(f"*WithLag/*train/**/lag/H=18"))
 
+def load_graph(area, H=18):
+    graph_source = max(DATA.glob(f"*WithLag/*train/**/lag/H={H}"))
 
-def load_graph(area):
     file = max(graph_source.glob(f"**/{area}.pkl"))
     log.debug(f"Graph file: {relpath(file)}")
 
@@ -53,7 +53,7 @@ def concentrated_subset(trips: pd.DataFrame, focal_point, focus_radius):
     return trips[dist_to_focal_point <= focus_radius]
 
 
-def get_problem_data(area, table_names: list, sql_where: str, max_trips: int, focal_point: tuple, focus_radius: float):
+def get_problem_data(area, table_names: list, sql_where, max_trips, focal_point: tuple, focus_radius, graph_h=18):
     trips = pd.concat(axis=0, objs=[
         get_raw_trips(table_name, where=sql_where).assign(table_name=table_name)
         for table_name in sorted(table_names)
@@ -68,7 +68,7 @@ def get_problem_data(area, table_names: list, sql_where: str, max_trips: int, fo
     trips = trips.assign(xa=list(zip(trips.xa_lat, trips.xa_lon)))
     trips = trips.assign(xb=list(zip(trips.xb_lat, trips.xb_lon)))
 
-    graph = load_graph(area)
+    graph = load_graph(area, H=graph_h)
     trips = with_nearest_ingraph(trips, graph)
     trips = attach_timewindows(trips)
     trips = concentrated_subset(trips, focal_point=focal_point, focus_radius=focus_radius)
@@ -81,3 +81,26 @@ def get_problem_data(area, table_names: list, sql_where: str, max_trips: int, fo
     log.info(f"Filtered down to {len(trips)} trips: \n{trips.head(3).to_markdown()} \netc...")
 
     return pd.Series({'area': area, 'table_names': table_names, 'graph': graph, 'trips': trips, 'depot': depot})
+
+
+def postprocess_problem_data(problem_data, **params):
+    problem_data.trips = pd.DataFrame(problem_data.trips).sample(
+        frac=params['sample_trip_frac'],
+        random_state=params['sample_trip_seed'],
+        replace=False,
+    )
+
+    log.info(f"{len(problem_data.trips)} trips left after postprocessing.")
+
+    nx.set_edge_attributes(
+        problem_data.graph,
+        {
+            e: (v * params['graph_ttt_factor'])
+            for (e, v) in nx.get_edge_attributes(problem_data.graph, name=EDGE_TTT_KEY).items()
+        },
+        name=EDGE_TTT_KEY
+    )
+
+    log.info(f"Applied the time-to-transition factor {params['graph_ttt_factor']}.")
+
+    return problem_data

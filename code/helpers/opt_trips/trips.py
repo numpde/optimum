@@ -28,6 +28,10 @@ KEEP_COLS = ['ta', 'tb', 'xa_lon', 'xa_lat', 'xb_lon', 'xb_lat', 'n', 'distance'
 
 parallel_map = map
 
+# Default grace distance from given lat/lon to nearest in-graph lat/lon
+MAX_NEAREST = 20  # meters
+
+
 # cache = percache.Cache(str(mkdir(Path(__file__).parent / "cache") / "percache.dat"), livesync=True)
 # cache.clear(maxage=(60 * 60 * 24 * 7))
 
@@ -74,7 +78,7 @@ def get_raw_trips(table_name, where="", order="random()", limit=11111) -> pd.Dat
         return df
 
 
-def with_nearest_ingraph(trips, graph):
+def with_nearest_ingraph(trips, graph, max_nearest=MAX_NEAREST):
     with Section("Computing nearest in-graph nodes", out=log.debug):
         nearest_node = GraphNearestNode(graph)
 
@@ -86,9 +90,7 @@ def with_nearest_ingraph(trips, graph):
         trips['ia'] = A.index
         trips['ib'] = B.index
 
-        # Grace distance from given lat/lon to nearest in-graph lat/lon
-        MAX_NEAREST = 20  # meters
-        ii = (A.values <= MAX_NEAREST) & (B.values <= MAX_NEAREST)
+        ii = (A.values <= max_nearest) & (B.values <= max_nearest)
         trips = trips.loc[ii]
 
         log.debug(f"Keep {sum(ii)}, drop {sum(~ii)}.")

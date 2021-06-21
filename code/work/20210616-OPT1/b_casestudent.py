@@ -14,7 +14,7 @@ Working example
 https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/cvrptw.py
 """
 
-from z_sources import EDGE_TTT_KEY, get_problem_data
+from z_sources import EDGE_TTT_KEY, get_problem_data, postprocess_problem_data
 
 from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy
 
@@ -439,11 +439,14 @@ def solve(problem: pd.Series, **params):
     return (trips, routes)
 
 
+
 @cache
 def compute_all(**params):
     problem_data = get_problem_data(**params['data'])
 
-    reduced_problem_data = reduce_to_clique(problem_data, hash=params['data'])
+    problem_data = postprocess_problem_data(problem_data, **params['data_post'])
+
+    reduced_problem_data = reduce_to_clique(problem_data, hash={**params['data'], **params['data_post']})
     (trips, routes) = solve(reduced_problem_data, **params['fleet'], **params['optimization'], **params['search'])
 
     trips = trips.assign(ia=trips.ia.map(reduced_problem_data.original_node))
@@ -476,23 +479,34 @@ def main(out_dir=None, **params):
 
 
 def get_default_params():
+    # DON'T CHANGE ANY HERE
     return {
         'data': {
             'table_names': sorted({"green_tripdata_2016-05", "yellow_tripdata_2016-05"}),
             'area': "manhattan",
-            'max_trips': 1000,
+            'max_trips': 100,
             'sql_where': sql_string(f"""
                 ('2016-05-01 18:00' <= ta) and 
                 (tb <= '2016-05-01 19:00') and
                 (passenger_count == 1)
             """),
             'focal_point': (40.75798, -73.98550),  # Times Square
-            'focus_radius': 1000,  # meters
+            'focus_radius': 1000,
+
+            # lag-graph hour
+            'graph_h': 18,
+        },
+
+        'data_post': {
+            'sample_trip_frac': 1.0,
+            'sample_trip_seed': 43,
+
+            'graph_ttt_factor': 1.0,
         },
 
         'fleet': {
             'num_vehicles': 10,
-            'cap_vehicles': 8,
+            'cap_vehicles': 1,
             'max_vehicle_waiting_time': timedelta(minutes=10),
         },
 
@@ -519,6 +533,5 @@ if __name__ == '__main__':
     main(out_dir=out_dir, **get_default_params())
 
     from v_visualize import plot_all
-    plot_all(out_dir, out_dir)
 
-    # TODO: check that this runs
+    plot_all(out_dir, out_dir)

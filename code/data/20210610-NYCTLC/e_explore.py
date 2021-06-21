@@ -130,31 +130,72 @@ def pickup_hour_heatmap(table_name):
         px.f.savefig(mkdir(out_dir / f"{whatsmyname()}") / f"{table_name}.png")
 
 
+def trip_fare_vs_distance(table_name):
+    limit = 111111
+
+    sql = f"""
+        SELECT [ta], [tb], [total_amount] as fare, [distance] as ds, strftime('%w', ta) as w, strftime('%H', ta) as h
+        FROM [{table_name}]
+        WHERE (fare > 0) and ((100 < distance) and (distance < 2000))
+        ORDER BY RANDOM() 
+        LIMIT {limit}
+    """
+
+    trips = QUERY(sql).astype({'h': int})
+
+    trips = trips[trips.fare <= np.quantile(trips.fare, 0.99)]
+
+    from matplotlib.colors import LinearSegmentedColormap as LinearColormap
+    from matplotlib.ticker import MaxNLocator
+
+    with Plox(default_style) as px:
+        px.a.grid(lw=0.3)
+        for (h, df) in trips.groupby(by='h'):
+            trip_dist = df.ds
+            trip_fare = df.fare
+
+            cmap = LinearColormap.from_list(name="sun", colors=["black", "lightblue", "yellow", "orange", "black"])
+
+            px.a.scatter(
+                trip_dist, trip_fare,
+                c=cmap([h / 24]), s=3, alpha=0.2, lw=0, zorder=-10,
+                label=f"{len(df)} trips at {h}h"
+            )
+
+            px.a.set_xlabel(f"Trip distance, m")
+            px.a.set_ylabel(f"Trip fare, \$")
+
+            [h.set_alpha(1) for h in px.a.legend(fontsize=7, loc='upper right').legendHandles]
+
+        px.f.savefig(mkdir(out_dir / f"{whatsmyname()}") / f"{table_name}.png")
+
+
+@cache
+def zoom(table_name: str, weekday: int, limit, radius, focus=(40.75798, -73.98550)):
+    sql = f"""
+        SELECT [ta], [tb], [xa_lat], [xa_lon], [xb_lat], [xb_lon], [distance] as ds, strftime('%w', ta) as weekday
+        FROM [{table_name}]
+        WHERE (weekday == '{weekday}')
+        ORDER BY RANDOM() 
+        LIMIT {limit}
+    """
+
+    # Note: could do `where` by lat/lon bbox
+
+    trips = QUERY(sql)
+
+    trips = trips.assign(xa=list(zip(trips.xa_lat, trips.xa_lon)))
+    trips = trips.assign(xb=list(zip(trips.xb_lat, trips.xb_lon)))
+
+    dist_to_focus = pd.Series(index=trips.index, data=[
+        max(geodistance(row.xa, focus).m, geodistance(row.xb, focus).m)
+        for (i, row) in progress(trips.iterrows(), total=len(trips))
+    ])
+
+    return trips[dist_to_focus <= radius]
+
+
 def trip_speeds_times_square(table_name):
-    @cache
-    def zoom(table_name: str, weekday: int, limit, radius, focus=(40.75798, -73.98550)):
-        sql = f"""
-            SELECT [ta], [tb], [xa_lat], [xa_lon], [xb_lat], [xb_lon], [distance] as ds, strftime('%w', ta) as weekday
-            FROM [{table_name}]
-            WHERE (weekday == '{weekday}')
-            ORDER BY RANDOM() 
-            LIMIT {limit}
-        """
-
-        # Note: could do `where` by lat/lon bbox
-
-        trips = QUERY(sql)
-
-        trips = trips.assign(xa=list(zip(trips.xa_lat, trips.xa_lon)))
-        trips = trips.assign(xb=list(zip(trips.xb_lat, trips.xb_lon)))
-
-        dist_to_focus = pd.Series(index=trips.index, data=[
-            max(geodistance(row.xa, focus).m, geodistance(row.xb, focus).m)
-            for (i, row) in progress(trips.iterrows(), total=len(trips))
-        ])
-
-        return trips[dist_to_focus <= radius]
-
     query_params = dict(weekday=3, limit=1000000, radius=1000)
 
     trips = zoom(table_name, **query_params)
@@ -193,8 +234,8 @@ def trip_speeds_times_square(table_name):
             xx = np.linspace(0, MAX_TRIP_SPEED, 101)
             yy = kde(xx)
 
-            more = dict(label=f"{h}h") if (h % 2) else {}
-            px.a.plot(xx, yy, lw=1, c=cmap([h / 24]), alpha=0.7, **more)
+            more = dict(label=f"{h}h") if not (h % 2) else {}
+            px.a.plot(xx, yy, lw=(3 if (h in [6, 18]) else 1), c=cmap([h / 24]), alpha=0.7, **more)
             # px.a.hist(df.v, bins='fd', lw=2, density=True, histtype='step', color=cmap([h / 24]), zorder=10, alpha=0.7, label=f"{h}h")
 
         xticks = list(range(int(np.ceil(MAX_TRIP_SPEED))))
@@ -390,7 +431,8 @@ def trip_duration_vs_distance2(table_name):
 
 if __name__ == '__main__':
     ff = [
-        trip_speeds_times_square,
+        trip_fare_vs_distance,
+        # trip_speeds_times_square,
         # trip_duration_vs_distance2,
         # trip_distance_histogram,
         # trip_trajectories_initial,

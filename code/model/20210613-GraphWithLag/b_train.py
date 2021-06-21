@@ -97,7 +97,6 @@ def get_trips(table_names: List[str], **kwargs):
 def get_trips_by_hour(table_names: List[str], hour=8):
     where = f"(({hour}) == cast(strftime('%H', [ta]) as int))"
     trips = get_trips(table_names, where=where)
-    # trips = trips.rename(columns={'distance': "distance_ref"})
     return trips
 
 

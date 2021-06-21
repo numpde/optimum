@@ -30,7 +30,7 @@ from plox import Plox, rcParam
 from opt_maps import maps
 from opt_utils.graph import largest_component, GraphNearestNode, GraphPathDist
 
-from z_sources import get_problem_data
+from z_sources import get_problem_data, postprocess_problem_data
 
 BASE = Path(__file__).parent
 DATA = next(p for p in BASE.parents for p in p.glob("**/model")).resolve()
@@ -283,7 +283,7 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
     trips.twa = list(map(eval, trips.twa))
     trips.twb = list(map(eval, trips.twb))
 
-    graph = (cache(get_problem_data)(**params['data'])).graph
+    graph = postprocess_problem_data((cache(get_problem_data)(**params['data'])), **params['data_post']).graph
 
     alles = {'graph': graph, 'trips': trips, 'routes': routes}
 
