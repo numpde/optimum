@@ -176,7 +176,7 @@ approximate locations of pickup and dropoff.
 Based on those data
 we give a partial answer to the question
 \begin{quote}
-	How many minibuses could service the same demand?
+	How many adaptively routed minibuses could service the same demand?
 \end{quote}
 
 %
@@ -309,24 +309,24 @@ only the pickup and dropoff locations
 %
 %
 We leverage the reported trip duration to
-infer plausible mean-field travel velocities 
+infer plausible mean-field travel speeds
 (see Fig.~\ref{f:mfv})
 throughout the road graph
 iteratively as follows.
 %
-The velocities on all roads are initialized to \SI{5}{m/s}.
+The speeds on all roads are initialized to \SI{5}{m/s}.
 %
 For a sample of trips that start at 18-19h
 the quickest trajectories are estimated.
 %
-The velocities of the road bits participating in those trajectories
+The speed of the road bits participating in those trajectories
 are adjusted toward the reported trip duration.
 %
 This is repeated.
 %
 %
 \marginnote{\CODE{code/model/20210613-GraphWithLag/b_train.py}}
-%
+
 %
 
 Henceforth, ``quickest''
@@ -452,7 +452,7 @@ Thus, we believe our results remain informative.
 \subsection[Times Square]{Times Square\marginpar{\smash{\CODE{code/work/20210616-OPT1}}}}
 \label{s:case1}
 
-\edef\caseone{\thecodeindex}
+\edef\codecaseone{\thecodeindex}
 
 We take
 the first $n$ single-passenger trips 
@@ -475,6 +475,17 @@ so we focus here on
 	.
 \end{quote}
 
+
+%
+
+The traffic model from \S\ref{s:traffic} predicts trip times
+near Times Square well for 6-7 am
+but is too optimistic for 6-7 pm;
+we use it here nevertheless.
+%
+\marginnote{\CODE{code/model/20210613-GraphWithLag/c_triptime_times_square}}
+\edef\codetriptime{\thecodeindex}
+
 %
 
 We find that the single-passenger fleet ($C = 1$)
@@ -485,7 +496,7 @@ see Fig.~\ref{f:case1-hist}.
 %
 %
 The results for $\SI{2}{km}$ radius with $N = 20$ 
-vehicles are similar (see code \#\caseone\xspace to browse the results).
+vehicles are similar (see code \#\codecaseone\xspace to browse the results).
 
 %
 
@@ -504,7 +515,7 @@ we estimate that this demand can be serviced by
 	$N \approx 20$ single-passenger taxis; or
 \item
 	$N \approx 10$ minibuses of capacity $C \approx 8$,
-	if some excess travel time is allowed.
+	if some excess travel time is tolerated.
 \end{itemize}
 
 %
@@ -591,8 +602,61 @@ we estimate that this demand can be serviced by
 
 
 
+\subsection{Game-theoretic angle}
 
-\TODO{another case study?}
+Trips near Times Square
+take $3\times$ longer
+at 6-7 PM than at 6-7 AM
+(code \#\codetriptime\xspace and \CODE{code/data/20210610-NYCTLC/e_explore/trip_speeds_times_square}).
+%
+%
+Let's attribute this to bad traffic conditions.
+%
+%
+Consider a passenger
+(ignoring groups)
+who has a choice between 
+(A) a single-passenger taxi that takes the quickest route; and 
+(B) a minibus that occasionally detours to pickup/dropoff others.
+%
+%
+An additional taxi does not affect the traffic substantially;
+hence, 
+a narrowly rational passenger prefers (A)
+if the monetary difference is insignificant.
+
+%
+
+Let
+(A) cost $A$\$
+and
+(B) cost $B$\$.
+%
+Suppose (B) is subsidized by the city so that $B < A$.
+%
+%
+
+We assume
+passengers measure the excess travel time
+in dollars.
+%
+To obtain a proxy for this conversion, we start with the 2019 income census%
+\footnote{\href{https://data.census.gov/cedsci/table?g=1600000US3651000&tid=ACSST5Y2019.S2001&hidePreview=true&moe=false}{https://data.census.gov/cedsci/table?g=1600000US3651000\&tid=ACSST5Y2019.S2001}};
+%
+the log-normal distribution with $\mu = 11$ and $\sigma = 0.7$ fits reasonably
+(see \CODE{code/data/20210621-Income});
+%
+a passenger's income is drawn from this log-normal;
+%
+division by $52 \times 5 \times 8 \si{h}$ gives \$/h.
+
+%
+
+
+
+
+
+\TODO{game}
 
 
 
