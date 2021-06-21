@@ -2,8 +2,8 @@
 download_cache
 trips.db
 *.env
-percache.*
-cache.*
+**/percache.*
+**/cache.*
 
 tex/main.*
 !*.tex
