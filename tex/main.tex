@@ -316,7 +316,7 @@ iteratively as follows.
 %
 The speeds on all roads are initialized to \SI{5}{m/s}.
 %
-For a sample of trips that start at 18-19h
+For a sample of trips that start at 6-7~pm
 the quickest trajectories are estimated.
 %
 The speed of the road bits participating in those trajectories
@@ -602,58 +602,93 @@ we estimate that this demand can be serviced by
 
 
 
-\subsection{Game-theoretic angle}
+\subsection{Game-theoretic spin}
 
-Trips near Times Square
-take $3\times$ longer
-at 6-7 PM than at 6-7 AM
+Consider a passenger
+(ignoring groups)
+who chooses between: 
+(A) a single-passenger taxi at cost $A$ that takes the quickest route,
+or
+(B) a minibus at cost $B$ that occasionally detours for others.
+%
+%
+%An extra car does not affect the traffic much;
+%hence, 
+%a narrowly rational passenger prefers (A)
+%if $A \approx B$.
+%
+%
+%
+The costs are assumed fixed,
+since the trips in \S\ref{s:case1} are relatively short.
+%
+%
+The taxi fare is $A \approx \SI{7}{\$}$ for short trips 
+(code \CODE{code/data/20210610-NYCTLC/e_explore/trip_fare_vs_distance}).
+
+
+%
+
+Between 6-7 am and 6-7 pm,
+the number of requests doubles (Fig.~\ref{f:nyctlc-pickup})
+while trip speeds near Times Square are nearly 3$\times$ lower
 (code \#\codetriptime\xspace and \CODE{code/data/20210610-NYCTLC/e_explore/trip_speeds_times_square}).
 %
 %
-Let's attribute this to bad traffic conditions.
-%
-%
-Consider a passenger
-(ignoring groups)
-who has a choice between 
-(A) a single-passenger taxi that takes the quickest route; and 
-(B) a minibus that occasionally detours to pickup/dropoff others.
-%
-%
-An additional taxi does not affect the traffic substantially;
-hence, 
-a narrowly rational passenger prefers (A)
-if the monetary difference is insignificant.
-
-%
-
-Let
-(A) cost $A$\$
+We postulate a causal link and
+assume the 6-7~am traffic \`a la \S\ref{s:traffic} 
+when all passengers take (B);
+assume $1/3$ the speeds 
+when all passengers take (A);
 and
-(B) cost $B$\$.
+interpolate linearly inbetween.
+
 %
-Suppose (B) is subsidized by the city so that $B < A$.
+
+We take the $n = 100$ requests from \S\ref{s:case1}
+and split them randomly into $a$ that take (A) and $b$ that take (B).
 %
+%
+For simplicity,
+we keep the minibus fleet at $N = 10$ regardless of $a/b$.
+
 %
 
 We assume
-passengers measure the excess travel time
-in dollars.
+passengers convert excess travel time to dollars.
 %
-To obtain a proxy for this conversion, we start with the 2019 income census%
-\footnote{\href{https://data.census.gov/cedsci/table?g=1600000US3651000&tid=ACSST5Y2019.S2001&hidePreview=true&moe=false}{https://data.census.gov/cedsci/table?g=1600000US3651000\&tid=ACSST5Y2019.S2001}};
-%
-the log-normal distribution with $\mu = 11$ and $\sigma = 0.7$ fits reasonably
+As a proxy for this, we start with the 2019 income census%
+\footnote{\href{https://data.census.gov/cedsci/table?g=1600000US3651000&tid=ACSST5Y2019.S2001&hidePreview=true&moe=false}{https://data.census.gov/cedsci/table?g=1600000US3651000\&tid=ACSST5Y2019.S2001}},
+to which
+the log-normal distribution with $\mu = 11$ and $\sigma = 0.7$ fits reasonably well
 (see \CODE{code/data/20210621-Income});
 %
 a passenger's income is drawn from this log-normal;
 %
-division by $52 \times 5 \times 8 \si{h}$ gives \$/h.
+division by $52 \times 5 \times 8 \si{h}$ gives their hour-to-dollar conversion factor $c$.
 
 %
 
+For each condition $a / b$
+we compute the expected excess travel time $e$ 
+for (B) passengers.
+%
+%We convert it to dollars using the passenger-specific factor $c$.
+%
+%
+Comparing
+$A$~vs.~$B + (e \times c)$
+for each time-to-dollar factor $c$ from the income distribution
+gives a ratio $\bar{a} / \bar{b}$
+of those who actually prefer (A) to those who prefer (B).
+%
+%
+This evolutionary pressure
+indicates
+whether (A) or (B) should increase 
+starting from the condition $a / b$.
 
-
+%
 
 
 \TODO{game}
