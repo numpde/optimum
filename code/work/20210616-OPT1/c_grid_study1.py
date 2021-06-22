@@ -27,6 +27,8 @@ def run(new_params: dict, work_dir: Path):
     params['data']['max_trips'] = 100
     params['search']['solver_solution_limit'] = 1000
 
+    # TODO: hour for the graph?
+
     # Setup `params`
     for category in params:
         for variable in params[category]:
@@ -43,7 +45,7 @@ def run_all():
             k: v
             for (k, v) in sorted(locals().items()) if not k.startswith('.')
         }
-        for repetition in [1, 2, 3, 4, 5]
+        for repetition in [1, 2, 3, 4, 5, 6, 7, 8, 9]
         for sample_trip_seed in [10 + repetition]
 
         for bustakers_fraction in [1.0, 0.8, 0.6, 0.4, 0.2]

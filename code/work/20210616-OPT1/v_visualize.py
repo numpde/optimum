@@ -99,10 +99,14 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
                 route = routes[trip.iv]
                 route = route[(trip.iv_ta < route.lag) & (route.lag <= trip.iv_tb)]
 
-                # TODO: why some edges are missing?
+                # TODO: are some edges missing?
+                path = list(pairwise(route.index))
+                missing = {e for e in path if e not in edge_lag and (e[0] != e[1])}
+                if missing:
+                    log.warning(f"missing edges: {missing}")
 
                 short_len = nx.shortest_path_length(graph, trip.ia, trip.ib, weight=edge_weight)
-                route_len = sum(((e[0] != e[1]) and edge_lag.get(e, np.nan)) for e in pairwise(route.index))
+                route_len = sum(((e[0] != e[1]) and edge_lag.get(e, np.nan)) for e in path)
                 c = sm.to_rgba((route_len - short_len) / 60)
                 s = 10
 
@@ -278,14 +282,23 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
         routes = pd.read_table(fd, parse_dates=['est_time_arr', 'est_time_dep'])
 
     with unlist1(path_src.glob("trips.tsv")).open(mode='r') as fd:
-        trips = pd.read_table(fd, parse_dates=['ta', 'tb', 'iv_ta', 'iv_tb'])
+        trips = pd.read_table(fd, parse_dates=['ta', 'tb', 'iv_ta', 'iv_tb'], index_col=0)
 
     # noinspection PyUnresolvedReferences
     from pandas import Timestamp  # required for `eval`
     trips.twa = list(map(eval, trips.twa))
     trips.twb = list(map(eval, trips.twb))
 
-    graph = postprocess_problem_data((cache(get_problem_data)(**params['data'])), **params['data_post']).graph
+    problem_data = (cache(get_problem_data)(**params['data']))
+
+    # TODO: the following does not hold
+    # assert set(trips.index).issubset(set(problem_data.trips.index))
+    # Note: we do not use problem_data.trips
+
+    problem_data = postprocess_problem_data(problem_data, **params['data_post'])
+    problem_data.trips = None
+
+    graph = problem_data.graph
 
     alles = {'graph': graph, 'trips': trips, 'routes': routes}
 
@@ -310,6 +323,8 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
 
 def main():
     path = unlist1(Path(__file__).with_suffix('').glob("sample_data"))
+
+    # TODO: check that this runs
 
     for subcase in path.glob("*cases/*"):
         plot_all(path_src=subcase, path_dst=mkdir(path / f"plots/{subcase.name}"), skip_existing=False)
