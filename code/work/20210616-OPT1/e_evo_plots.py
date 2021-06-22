@@ -20,7 +20,7 @@ style = {
 def plot_evo(grid: pd.DataFrame) -> Plox:
     with Plox(style) as px:
         for (n, ((A, B), grid)) in enumerate(grid.groupby(by=['A', 'B'])):
-            c = ["darkgreen", "darkblue", "darkorange", "darkred"][n]
+            c = ["green", "darkblue", "darkorange", "darkred"][n]
 
             px.a.plot(np.nan, np.nan, '.',  c=c, ms=10, label=f"(A, B) = {(A, B)}")
 
@@ -38,8 +38,8 @@ def plot_evo(grid: pd.DataFrame) -> Plox:
 
         px.a.legend(loc='lower right')
 
-        px.a.set_xlabel("Fraction of bustakers")
-        px.a.set_ylabel("Preferred fraction of bustakers")
+        px.a.set_xlabel("Fraction of bus takers")
+        px.a.set_ylabel("Preferred fraction of bus takers")
 
         yield px
 
