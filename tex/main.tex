@@ -447,10 +447,9 @@ Meanwhile, the density of requests in space and time is quite high.
 Thus, we believe our results remain informative.
 
 
-\section{Case study} \label{s:case}
+\section[Case study]{Case study \marginpar{\smash{\CODE{code/work/20210616-OPT1}}}} \label{s:case}
 
-\subsection[Times Square]{Times Square\marginpar{\smash{\CODE{code/work/20210616-OPT1}}}}
-\label{s:case1}
+\subsection{Times Square} \label{s:case1}
 
 \edef\codecaseone{\thecodeindex}
 
@@ -602,7 +601,7 @@ we estimate that this demand can be serviced by
 
 
 
-\subsection{Game-theoretic spin}
+\subsection{Game-theoretic spin} \label{s:game1}
 
 Consider a passenger
 (ignoring groups)
@@ -623,7 +622,7 @@ The costs are assumed fixed,
 since the trips in \S\ref{s:case1} are relatively short.
 %
 %
-The taxi fare is $A \approx \SI{7}{\$}$ for short trips 
+The taxi fare is $A \approx \SI{6}{\$}$ for short trips 
 (code \CODE{code/data/20210610-NYCTLC/e_explore/trip_fare_vs_distance}).
 
 
@@ -666,6 +665,8 @@ the log-normal distribution with $\mu = 11$ and $\sigma = 0.7$ fits reasonably w
 a passenger's income is drawn from this log-normal;
 %
 division by $52 \times 5 \times 8 \si{h}$ gives their hour-to-dollar conversion factor $c$.
+%
+\marginnote{\CODE{code/work/20210616-OPT1/d_postprocess.py}}
 
 %
 
@@ -690,8 +691,27 @@ starting from the condition $a / b$.
 
 %
 
+The results (Fig.~\ref{f:game1})
+indicate that 
+\begin{itemize}
+\item 
+	half the people prefer taking the minibus if $A - B = \SI{3}{\$}$; and
+\item
+	most people prefer taking the minibus if $A - B = \SI{6}{\$}$.
+\end{itemize}
 
-\TODO{game}
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{20210616-OPT1/c_grid_study1/UTC-20210621-232339/e_evo_plots/evo}
+
+\caption{%
+	\protect\TODO{Caption}
+	Results of \S\ref{s:game1}.
+}
+\label{f:game1}
+\end{figure}
+
+\TODO{code refs}
 
 
 
