@@ -1,6 +1,5 @@
 # RA, 2021-06-18
 
-
 EDGE_TTT_KEY = "lag"  # time-to-transition attribute
 
 from twig import log
@@ -20,17 +19,16 @@ import networkx as nx
 import json
 import percache
 
+from sorcery import unpack_keys as unpack
 from inclusive import range
-
-from matplotlib.ticker import MaxNLocator
 
 from tcga.utils import unlist1, relpath, mkdir, first, Now, whatsmyname, First
 from plox import Plox, rcParam
 
 from opt_maps import maps
-from opt_utils.graph import largest_component, GraphNearestNode, GraphPathDist
 
-from z_sources import get_problem_data, postprocess_problem_data
+from i_infer_trajectories import paths_of_route
+from z_sources import get_problem_data, preprocess_problem_data, read_subcase
 
 BASE = Path(__file__).parent
 DATA = next(p for p in BASE.parents for p in p.glob("**/model")).resolve()
@@ -43,23 +41,11 @@ sql_string = First(str.split).then(' '.join)
 style = {rcParam.Font.size: 16, rcParam.Text.usetex: True}
 
 
-def paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY):
-    node_loc = pd.DataFrame(nx.get_node_attributes(graph, name='loc'), index=["lat", "lon"])
-    edge_lag = nx.get_edge_attributes(graph, name=edge_weight)
-
-    for (uv, (ta, tb)) in zip(pairwise(route.i), pairwise(route.est_time_dep)):
-        path = nx.shortest_path(graph, *uv, weight=edge_weight)
-        path = node_loc[list(path)].T
-        path = path.assign(lag=(np.cumsum([ta] + [timedelta(seconds=1) * edge_lag[e] for e in pairwise(path.index)])))
-
-        yield path
-
-
 @contextlib.contextmanager
 def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, edge_weight=EDGE_TTT_KEY,
                             **kwargs) -> Plox:
     routes = {
-        iv: pd.concat(axis=0, objs=list(paths_of_route(route, graph, edge_weight=edge_weight)))
+        iv: pd.concat(axis=0, objs=list(paths_of_route(route, graph, edge_ttt_weight=edge_weight)))
         for (iv, route) in routes.groupby(by='iv')
     }
 
@@ -77,13 +63,13 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
         px.a.set_xlim(extent[0:2])
         px.a.set_ylim(extent[2:4])
 
-        import matplotlib.cm
-        import matplotlib.colors as mcolors
-        cmap = mcolors.LinearSegmentedColormap.from_list('annoyance',
-                                                         ["darkblue", "darkgreen", "darkorange", "darkred"])
+        from matplotlib.cm import ScalarMappable
+        from matplotlib.colors import LinearSegmentedColormap, Normalize
 
-        norm = mcolors.Normalize(vmin=0, vmax=15)
-        sm = matplotlib.cm.ScalarMappable(norm=norm, cmap=cmap)
+        cmap = LinearSegmentedColormap.from_list('annoyance', ["darkblue", "darkgreen", "darkorange", "darkred"])
+
+        norm = Normalize(vmin=0, vmax=15)
+        sm = ScalarMappable(norm=norm, cmap=cmap)
         sm.set_clim(norm.vmin, norm.vmax)
 
         from matplotlib.transforms import Bbox
@@ -99,11 +85,15 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
                 route = routes[trip.iv]
                 route = route[(trip.iv_ta < route.lag) & (route.lag <= trip.iv_tb)]
 
+                if any(routes[trip.iv].lag.diff().dt.total_seconds() < 0):
+                    log.warning(f"route `lag` is not ordered.")
+
                 # TODO: are some edges missing?
                 path = list(pairwise(route.index))
                 missing = {e for e in path if e not in edge_lag and (e[0] != e[1])}
                 if missing:
                     log.warning(f"missing edges: {missing}")
+                    breakpoint()
 
                 short_len = nx.shortest_path_length(graph, trip.ia, trip.ib, weight=edge_weight)
                 route_len = sum(((e[0] != e[1]) and edge_lag.get(e, np.nan)) for e in path)
@@ -186,7 +176,7 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
 
         # log.debug(f"Route: \n{route.to_markdown()}")
 
-        path = pd.concat(axis=0, objs=list(paths_of_route(route, graph, edge_weight=EDGE_TTT_KEY)))
+        path = pd.concat(axis=0, objs=list(paths_of_route(route, graph, edge_ttt_weight=EDGE_TTT_KEY)))
 
         path = path[path.lag <= t_max]
 
@@ -275,14 +265,7 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
 
     log.info(f"Plotting {relpath(path_src)} -> {relpath(path_dst)}")
 
-    with unlist1(path_src.glob("params.json")).open(mode='r') as fd:
-        params = json.load(fd)
-
-    with unlist1(path_src.glob("routes.tsv")).open(mode='r') as fd:
-        routes = pd.read_table(fd, parse_dates=['est_time_arr', 'est_time_dep'])
-
-    with unlist1(path_src.glob("trips.tsv")).open(mode='r') as fd:
-        trips = pd.read_table(fd, parse_dates=['ta', 'tb', 'iv_ta', 'iv_tb'], index_col=0)
+    (params, routes, trips) = unpack(read_subcase(path_src))
 
     # noinspection PyUnresolvedReferences
     from pandas import Timestamp  # required for `eval`
@@ -291,11 +274,10 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
 
     problem_data = (cache(get_problem_data)(**params['data']))
 
-    # TODO: the following does not hold
-    # assert set(trips.index).issubset(set(problem_data.trips.index))
-    # Note: we do not use problem_data.trips
+    if not set(trips.index).issubset(set(problem_data.trips.index)):
+        log.warning(f"`problem_data.trips` does not contain the trips from `trips.tsv`")
 
-    problem_data = postprocess_problem_data(problem_data, **params['data_post'])
+    problem_data = preprocess_problem_data(problem_data, **params['data_post'])
     problem_data.trips = None
 
     graph = problem_data.graph
@@ -323,8 +305,6 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
 
 def main():
     path = unlist1(Path(__file__).with_suffix('').glob("sample_data"))
-
-    # TODO: check that this runs
 
     for subcase in path.glob("*cases/*"):
         plot_all(path_src=subcase, path_dst=mkdir(path / f"plots/{subcase.name}"), skip_existing=False)

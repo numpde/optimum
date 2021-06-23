@@ -1,6 +1,5 @@
-# 2021-06-18
+# 2021-06-23
 
-import contextlib
 import shutil
 
 from twig import log
@@ -15,7 +14,7 @@ from tcga.utils import mkdir, pretty, First, Now, relpath
 from b_casestudent import main as worker
 from b_casestudent import get_default_params, LOG_FILE
 
-out_dir = mkdir(Path(__file__).with_suffix('') / f"{Now()}")
+out_dir = mkdir(Path(__file__).with_suffix('') / f"UTC-00000000-Test")
 
 
 def run(new_params: dict, work_dir: Path):
@@ -24,8 +23,8 @@ def run(new_params: dict, work_dir: Path):
     params = get_default_params()
 
     params['data']['focus_radius'] = 1000
-    params['data']['max_trips'] = 100
-    params['data']['graph_h'] = 18
+    params['data']['max_trips'] = 10
+    params['data']['graph_h'] = 6
 
     params['search']['solver_solution_limit'] = 1000
 
@@ -39,21 +38,20 @@ def run(new_params: dict, work_dir: Path):
 
 
 def run_all():
-
     grid = pd.DataFrame(data=[
         {
             k: v
             for (k, v) in sorted(locals().items()) if not k.startswith('.')
         }
-        for repetition in [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        for sample_trip_seed in [10 + repetition]
+        for repetition in [1]
+        for sample_trip_seed in [42 + repetition]
 
-        for bustakers_fraction in [1.0, 0.8, 0.6, 0.4, 0.2]
+        for bustakers_fraction in [1.0, 0.8]
 
         for sample_trip_frac in [bustakers_fraction]
         for graph_ttt_factor in [(3 - 2 * bustakers_fraction)]
-        for num_vehicles in [10]
-        for cap_vehicles in [8]
+        for num_vehicles in [2]
+        for cap_vehicles in [1]
     ])
 
     grid.to_csv(out_dir / "param_grid.tsv", sep='\t', index=True, index_label="param_set")

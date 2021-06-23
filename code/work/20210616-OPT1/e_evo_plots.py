@@ -25,7 +25,9 @@ def plot_evo(grid: pd.DataFrame) -> Plox:
             px.a.plot(np.nan, np.nan, '.',  c=c, ms=10, label=f"(A, B) = {(A, B)}")
 
             for (i, run) in grid.iterrows():
-                px.a.plot(run['bustakers_fraction'], run['b_bar'], '.', c=c, ms=12, alpha=0.8, mec='none')
+                b_frac = run['bustakers_fraction'] * (1 - run['unserviced'] / run['num_trips'])
+
+                px.a.plot(b_frac, run['b_bar'], '.', c=c, ms=12, alpha=0.8, mec='none')
 
         (xlim, ylim) = (px.a.get_xlim(), px.a.get_ylim())
         a = min(min(xlim), min(ylim))
@@ -45,17 +47,14 @@ def plot_evo(grid: pd.DataFrame) -> Plox:
 
 
 def main():
-    grid_files = Path(__file__).parent.glob("**/param_grid.extended.tsv")
+    grid_files = Path(__file__).parent.glob("**/d_post*/param_grid.tsv")
 
     for grid_file in grid_files:
-        # if "UTC-20210621-232339" not in str(grid_file):
-        #     continue
-
         grid = pd.read_csv(grid_file, sep='\t')
 
         try:
             with plot_evo(grid) as px:
-                px.f.savefig(mkdir(grid_file.parent / Path(__file__).stem) / "evo.png")
+                px.f.savefig(mkdir(grid_file.parent.parent / Path(__file__).stem) / "evo.png")
 
             log.info(f"Success on {relpath(grid_file)}.")
         except:

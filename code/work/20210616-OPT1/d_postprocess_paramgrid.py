@@ -1,19 +1,22 @@
 # RA, 2021-06-21
 
+
 from twig import log
+
+import os.path
 
 from time import sleep
 from pathlib import Path
 
 from sigfig import round
+
 import scipy.stats
 import numpy as np
 import pandas as pd
 
-from tcga.utils import relpath, unlist1, mkdir
+from tcga.utils import relpath, unlist1, mkdir, Now
 
 from opt_utils.misc import Section, datatable_html
-
 from opt_utils.misc import Memo
 
 memo = Memo()
@@ -22,44 +25,21 @@ memo = Memo()
 income: scipy.stats.rv_continuous = scipy.stats.lognorm(s=sigma, scale=np.exp(mu))
 
 
-def attach_stuff(src_dir: Path, grid: pd.DataFrame):
-    with Section(f"Attaching `stuff` for {relpath(src_dir)}", out=log.info):
-        def read_table(subpath: str):
-            try:
-                return pd.read_table(unlist1(src_dir.glob(subpath)))
-            except ValueError:
-                return pd.DataFrame()
+def attach_trivia(src_dir: Path, grid: pd.DataFrame):
+    def read_table(subpath: str):
+        try:
+            return pd.read_table(unlist1(src_dir.glob(subpath)))
+        except ValueError:
+            return pd.DataFrame()
 
-        more_info = pd.DataFrame(index=grid.index, data=[
-            {
-                'num_trips': len(read_table(f"*cases/{i}/trips.*")),
-            }
-            for i in grid.index
-        ])
+    trivia = pd.DataFrame(index=grid.index, data=[
+        {
+            'num_trips': len(read_table(f"*cases/{i}/trips.*")),
+        }
+        for i in grid.index
+    ])
 
-        img_links = pd.DataFrame(index=grid.index, data=[
-            {
-                Path(f).stem: f"<a href='{f}'><img src='{f}' height='30px'></a>"
-                for f in [str(f.resolve().relative_to(src_dir)) for f in src_dir.glob(f"plots/{i}/*.png")]
-            }
-            for i in grid.index
-        ])
-
-        etc_links = pd.DataFrame(index=grid.index, data=[
-            {
-                'subcase': (
-                        f"#{i}: " +
-                        ", ".join([
-                            f"<a href='{f}'>{Path(f).stem}</a>"
-                            for f in
-                            [str(f.resolve().relative_to(src_dir)) for f in sorted(src_dir.glob(f"*cases/{i}/*.*"))]
-                        ])
-                )
-            }
-            for i in grid.index
-        ])
-
-        grid = pd.concat([grid, more_info, img_links, etc_links], axis=1)
+    grid = pd.concat([grid, trivia], axis=1)
 
     return grid
 
@@ -134,25 +114,16 @@ def main():
         grid = pd.read_table(param_grid_file, index_col=0)
 
         try:
+            grid = attach_trivia(param_grid_file.parent, grid)
+        except:
+            log.exception(f"`attach_trivia` failed.")
+
+        try:
             grid = attach_predictions(param_grid_file.parent, grid)
         except:
             log.exception(f"`attach_predictions` failed.")
 
-        grid.to_csv(param_grid_file.with_suffix('.extended.tsv'), sep='\t')
-
-        try:
-            grid = attach_stuff(param_grid_file.parent, grid)
-        except:
-            log.exception(f"`attach_stuff` failed.")
-
-        table = grid.to_html(classes="display", table_id="data", border=1, index=False, escape=False)
-        html = datatable_html(table)
-
-        index_html = (param_grid_file.parent / "index.html")
-
-        with Section(f"Writing html index to {relpath(index_html)}", out=log.info):
-            with index_html.open(mode='w') as fd:
-                print(html, file=fd)
+        grid.to_csv(mkdir(param_grid_file.parent / Path(__file__).stem) / param_grid_file.name, sep='\t')
 
 
 if __name__ == '__main__':

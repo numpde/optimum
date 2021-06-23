@@ -1,0 +1,3 @@
+param_set	bustakers_fraction	cap_vehicles	graph_ttt_factor	num_vehicles	repetition	sample_trip_frac	sample_trip_seed	num_trips	A	B	unserviced	mean_excess_time	critical_income	a_bar	b_bar
+16	0.8	8	1.4	10	4	0.8	14	80	6	3	0	31.4	715900.0	0.0	1.0
+16	0.8	8	1.4	10	4	0.8	14	80	6	0	0	31.4	1432000.0	0.0	1.0

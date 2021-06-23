@@ -14,7 +14,7 @@ Working example
 https://github.com/google/or-tools/blob/stable/ortools/constraint_solver/samples/cvrptw.py
 """
 
-from z_sources import EDGE_TTT_KEY, get_problem_data, postprocess_problem_data
+from z_sources import EDGE_TTT_KEY, get_problem_data, preprocess_problem_data
 
 from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy
 
@@ -167,6 +167,7 @@ def reduce_to_clique(problem: pd.Series, hash=None):
     return problem
 
 
+# Don't cache
 def solve(problem: pd.Series, **params):
     log.debug(f"`{(whatsmyname())}` is busy now...")
 
@@ -454,7 +455,7 @@ def attach_shortest(trips, graph):
 @cache
 def compute_all(**params):
     problem_data = get_problem_data(**params['data'])
-    problem_data = postprocess_problem_data(problem_data, **params['data_post'])
+    problem_data = preprocess_problem_data(problem_data, **params['data_post'])
 
     data_hash = {**params['data'], **params['data_post']}
 
@@ -491,7 +492,7 @@ def main(out_dir=None, **params):
 
 
 def get_default_params():
-    # DON'T CHANGE ANY HERE
+    # DON'T CHANGE ANY HERE (CAN ADD, THOUGH)
     return {
         'data': {
             'table_names': sorted({"green_tripdata_2016-05", "yellow_tripdata_2016-05"}),
@@ -506,7 +507,7 @@ def get_default_params():
             'focus_radius': 1000,
 
             # lag-graph hour
-            'graph_h': 18,
+            'graph_h': 18,  # 6 or 18
         },
 
         'data_post': {
@@ -544,6 +545,6 @@ if __name__ == '__main__':
     out_dir = mkdir(Path(__file__).with_suffix('') / f"{Now()}").resolve()
     main(out_dir=out_dir, **get_default_params())
 
-    from v_visualize import plot_all
+    from v_visualizer import plot_all
 
     plot_all(out_dir, out_dir)

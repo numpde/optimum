@@ -62,11 +62,13 @@ class Memo(dict):
             return value0
 
 
-def datatable_html(table_html: str):
+def datatable_html(table_html: str, title="Data", author=""):
     # https://datatables.net/extensions/fixedheader/examples/options/columnFiltering.html
     template = r"""
     <html>
-    <head><title></title>
+    <head>
+    <meta name="author" content="{author}">
+    <title>{title}</title>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.9/js/dataTables.fixedHeader.min.js"></script>
@@ -106,11 +108,11 @@ def datatable_html(table_html: str):
             orderCellsTop: true,
             fixedHeader: true,
             "lengthMenu": [[-1, 8, 16, 32, 64], ["All", 8, 16, 32, 64]],
-            "pageLength": 16,
+            "pageLength": -1,
         });
     });
     </script>
     </body></html>
     """
 
-    return template.replace("{table}", table_html)
+    return template.replace("{table}", table_html).replace("{title}", title).replace("{author}", author)

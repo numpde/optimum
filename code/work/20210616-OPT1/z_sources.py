@@ -2,6 +2,8 @@
 
 EDGE_TTT_KEY = "lag"  # time-to-transition attribute
 
+import json
+
 import numpy as np
 import pandas as pd
 import networkx as nx
@@ -11,6 +13,7 @@ from pathlib import Path
 from datetime import timedelta, datetime
 
 from geopy.distance import distance as geodistance
+from sorcery import dict_of
 
 from tcga.utils import unlist1, relpath, mkdir, first, Now, whatsmyname, First
 
@@ -53,25 +56,29 @@ def concentrated_subset(trips: pd.DataFrame, focal_point, focus_radius):
     return trips[dist_to_focal_point <= focus_radius]
 
 
-def get_problem_data(area, table_names: list, sql_where, max_trips, focal_point: tuple, focus_radius, graph_h=18):
+# Note: there's probably no good reason to cache this
+def get_problem_data(
+        area, table_names: list, sql_where, max_trips, focal_point: tuple, focus_radius, graph_h=18,
+):
     trips = pd.concat(axis=0, objs=[
-        get_raw_trips(table_name, where=sql_where).assign(table_name=table_name)
+        get_raw_trips(table_name, where=sql_where, limit=100000).assign(table_name=table_name)
         for table_name in sorted(table_names)
     ])
 
     assert len(trips), \
-        f"Query returned zero trips. Maybe a misshappen `where`: \n{sql_where}"
+        f"Query returned zero trips. Maybe a broken `where`: \n{sql_where}"
 
     log.debug(f"Raw query returned {len(trips)} trips.")
 
-    trips = trips[list(KEEP_COLS)].sort_values(by='ta')
+    trips = trips[list(KEEP_COLS)].sort_values(by=['ta', 'tb'])
     trips = trips.assign(xa=list(zip(trips.xa_lat, trips.xa_lon)))
     trips = trips.assign(xb=list(zip(trips.xb_lat, trips.xb_lon)))
 
-    graph = load_graph(area, H=graph_h)
-    trips = with_nearest_ingraph(trips, graph)
     trips = attach_timewindows(trips)
     trips = concentrated_subset(trips, focal_point=focal_point, focus_radius=focus_radius)
+
+    graph = load_graph(area, H=graph_h)
+    trips = with_nearest_ingraph(trips, graph)
 
     depot = unlist1(GraphNearestNode(graph)([focal_point]).index)
     assert all(np.isclose(focal_point, graph.nodes[depot]['loc'], rtol=1e-3))
@@ -83,7 +90,7 @@ def get_problem_data(area, table_names: list, sql_where, max_trips, focal_point:
     return pd.Series({'area': area, 'table_names': table_names, 'graph': graph, 'trips': trips, 'depot': depot})
 
 
-def postprocess_problem_data(problem_data, **params):
+def preprocess_problem_data(problem_data, **params):
     problem_data.trips = pd.DataFrame(problem_data.trips).sample(
         frac=params['sample_trip_frac'],
         random_state=params['sample_trip_seed'],
@@ -104,3 +111,16 @@ def postprocess_problem_data(problem_data, **params):
     log.info(f"Applied the time-to-transition factor {params['graph_ttt_factor']}.")
 
     return problem_data
+
+
+def read_subcase(path: Path) -> dict:
+    with unlist1(path.glob("params.json")).open(mode='r') as fd:
+        params = json.load(fd)
+
+    with unlist1(path.glob("routes.tsv")).open(mode='r') as fd:
+        routes = pd.read_table(fd, parse_dates=['est_time_arr', 'est_time_dep'])
+
+    with unlist1(path.glob("trips.tsv")).open(mode='r') as fd:
+        trips = pd.read_table(fd, parse_dates=['ta', 'tb', 'iv_ta', 'iv_tb'], index_col=0, dtype={'iv': 'Int64'})
+
+    return dict_of(params, routes, trips)

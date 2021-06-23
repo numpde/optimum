@@ -1,0 +1,3 @@
+param_set	bustakers_fraction	cap_vehicles	graph_ttt_factor	num_vehicles	repetition	sample_trip_frac	sample_trip_seed
+0	1.0	1	1.0	2	1	1.0	43
+1	0.8	1	1.4	2	1	0.8	43

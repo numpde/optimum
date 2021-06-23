@@ -10,7 +10,7 @@ import pandas as pd
 from tcga.utils import relpath, unlist1, mkdir
 
 from opt_utils.misc import Section
-from v_visualize import plot_all
+from v_visualizer import plot_all
 
 
 def main():
@@ -41,11 +41,12 @@ def main():
                     log.info(f"{i}: {dict(row)}")
                     plot_all(
                         path_src=unlist1(param_grid_file.parent.glob(f"*cases/{i}")),
-                        path_dst=mkdir(param_grid_file.parent / f"plots/{i}"),
+                        path_dst=mkdir(param_grid_file.parent / f"{Path(__file__).stem}/{i}"),
                     )
             except:
                 log.exception(f"Some plots failed. Continuing...")
                 sleep(3)
+                continue
 
 
 if __name__ == '__main__':

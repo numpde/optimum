@@ -16,7 +16,7 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 
-from tcga.utils import unlist1, relpath, mkdir, first
+from tcga.utils import unlist1, relpath, mkdir, first, whatsmyname
 
 from opt_utils.graph import largest_component, GraphNearestNode, GraphPathDist
 from opt_utils.misc import Section
@@ -60,20 +60,31 @@ def get_road_graph(area):
     return g
 
 
-def get_raw_trips(table_name, where="", order="random()", limit=11111) -> pd.DataFrame:
-    with Section("Querying trips", out=log.debug):
+def get_raw_trips(table_name, where="", order="ta, tb", limit=11111) -> pd.DataFrame:
+    with Section(f"Querying trips from {table_name}", out=log.debug):
         if (set(str(limit)) == {'1'}):
             log.warning(f"Suspicious limit: {limit}.")
 
         sql = " ".join([
-            f"SELECT * FROM [{table_name}]",
+            f"SELECT rowid, * FROM [{table_name}]",
             f"WHERE    ({where}) " if where else "",
-            f"ORDER BY ({order}) " if order else "",
-            f"LIMIT    ({limit}) " if limit else "",
+            f"ORDER BY {order} " if order else "",
+            f"LIMIT    {limit} " if limit else "",
         ])
 
         df = query_trips(sql)
         df = df.rename(columns={'passenger_count': "n"})
+
+        if 'rowid' in df.columns:
+            df = df.set_index('rowid')
+        else:
+            log.warning(f"No 'rowid' column in dataframe. Index may be arbitrary.")
+
+        if where and (len(df) == limit):
+            log.warning(f"`where` is non-empty but `limit` of {limit} records was hit.")
+
+        if "random" in order.lower():
+            log.warning(f"`order` contains 'random'.")
 
         return df
 
@@ -93,7 +104,7 @@ def with_nearest_ingraph(trips, graph, max_nearest=MAX_NEAREST):
         ii = (A.values <= max_nearest) & (B.values <= max_nearest)
         trips = trips.loc[ii]
 
-        log.debug(f"Keep {sum(ii)}, drop {sum(~ii)}.")
+        log.debug(f"{whatsmyname()}: keep {sum(ii)}, drop {sum(~ii)}.")
 
         return trips
 
@@ -117,8 +128,7 @@ def get_trips_mit_alles(area: str, table_names: List[str], keep_cols=tuple(KEEP_
     ])
 
     trips = trips[list(keep_cols)]
-
-    trips = trips.sort_values(by='ta')
+    trips = trips.sort_values(by=['ta', 'tb'])
 
     log.debug(f"Trips: \n{trips.head(6).to_markdown()}")
 
