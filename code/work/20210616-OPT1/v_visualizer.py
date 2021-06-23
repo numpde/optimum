@@ -1,9 +1,10 @@
 # RA, 2021-06-18
 
-EDGE_TTT_KEY = "lag"  # time-to-transition attribute
-
 from twig import log
+
 import logging
+
+from opt_utils.misc import Section
 
 log.parent.handlers[0].setLevel(logging.DEBUG)
 
@@ -15,6 +16,8 @@ from more_itertools import pairwise
 import numpy as np
 import pandas as pd
 import networkx as nx
+
+from matplotlib.ticker import MaxNLocator
 
 import json
 import percache
@@ -28,7 +31,7 @@ from plox import Plox, rcParam
 from opt_maps import maps
 
 from i_infer_trajectories import paths_of_route
-from z_sources import get_problem_data, preprocess_problem_data, read_subcase
+from z_sources import get_problem_data, preprocess_problem_data, read_subcase, EDGE_TTT_KEY
 
 BASE = Path(__file__).parent
 DATA = next(p for p in BASE.parents for p in p.glob("**/model")).resolve()
@@ -39,6 +42,9 @@ cache.clear(maxage=(60 * 60 * 24))
 sql_string = First(str.split).then(' '.join)
 
 style = {rcParam.Font.size: 16, rcParam.Text.usetex: True}
+
+# logging.root.manager.loggerDict.iteritems()
+logging.getLogger("PIL").setLevel(logging.WARNING)  # works?
 
 
 @contextlib.contextmanager
@@ -85,8 +91,8 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
                 route = routes[trip.iv]
                 route = route[(trip.iv_ta < route.lag) & (route.lag <= trip.iv_tb)]
 
-                if any(routes[trip.iv].lag.diff().dt.total_seconds() < 0):
-                    log.warning(f"route `lag` is not ordered.")
+                if any(routes[trip.iv].lag.diff().dt.total_seconds() < -2):
+                    log.warning(f"route `lag` for route {trip.iv} is far from ordered.")
 
                 # TODO: are some edges missing?
                 path = list(pairwise(route.index))
@@ -113,7 +119,7 @@ def excess_travel_time_traj(graph, trips: pd.DataFrame, routes: pd.DataFrame, ed
 
 
 @contextlib.contextmanager
-def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
+def visualize3d(graph, trips, routes: pd.DataFrame, **kw):
     import plotly.graph_objects as go
     import plotly.express as px
 
@@ -138,8 +144,9 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
                 y=[trip.xa_lat] * 2,
                 z=ztime(trip.twa),
                 # marker=dict(size=0),
-                line=dict(width=0.2, color="green"),
+                line=dict(width=0.4, color="green"),
                 mode="lines",
+                showlegend=False,
             ),
         )
 
@@ -150,8 +157,9 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
                 y=[trip.xb_lat] * 2,
                 z=ztime(trip.twb),
                 # marker=dict(size=0),
-                line=dict(width=0.2, color="red"),
+                line=dict(width=0.4, color="red"),
                 mode="lines",
+                showlegend=False,
             ),
         )
 
@@ -163,21 +171,24 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
                     y=[trip.xa_lat, trip.xb_lat],
                     z=ztime([trip.iv_ta, trip.iv_tb]),
                     # marker=dict(size=0),
-                    line=dict(width=0.8, color="green", dash="dash"),
+                    line=dict(width=0.8, color="blue", dash="dash"),
                     mode="lines",
+                    showlegend=False,
                 ),
             )
 
-    for (iv, route) in routes.groupby('iv'):
+    for (n, (iv, route)) in enumerate(routes.groupby('iv')):
         if max(route.load) == 0:
             continue
 
-        color = rng.choice(["black", "blue", "brown", "magenta"])
+        from matplotlib.cm import get_cmap as mpl_cmap
+        from matplotlib.colors import to_hex
+        color = to_hex((mpl_cmap("rainbow"))(n / len(set(routes.iv))))
 
-        # log.debug(f"Route: \n{route.to_markdown()}")
+        # import plotly.express
+        # color = plotly.express.colors.qualitative.Dark24[n]
 
         path = pd.concat(axis=0, objs=list(paths_of_route(route, graph, edge_ttt_weight=EDGE_TTT_KEY)))
-
         path = path[path.lag <= t_max]
 
         fig.add_trace(
@@ -186,13 +197,14 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kwargs):
                 y=path.lat,
                 z=ztime(path.lag),
                 # marker=dict(size=0),
-                line=dict(width=0.6, color=color),
+                line=dict(width=1, color=color),
                 mode="lines",
+                name=f"route {iv}",
             ),
         )
 
     fig.update_layout(
-        showlegend=False,
+        showlegend=True,
         scene=dict(
             xaxis_title="lon",
             yaxis_title="lat",
@@ -212,9 +224,6 @@ def excess_travel_time_hist(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.D
     new = (trips.iv_tb - trips.iv_ta).dt.total_seconds()
     with Plox({**style, rcParam.Figure.figsize: (8, 3)}) as px:
         data = (new - old) / 60
-
-        # DEBUG
-        # data = np.arange(0, 20)
 
         m = 15
         px.a.hist(data, bins=m, range=[0, 15], color="C0")
@@ -260,7 +269,7 @@ def vehicle_load(routes: pd.DataFrame, **kwargs):
         yield px
 
 
-def plot_all(path_src: Path, path_dst=None, skip_existing=True):
+def plot_all(path_src: Path, path_dst=None, skip_existing=True, do_3d=False):
     path_dst = path_dst or mkdir(path_src / "plots")
 
     log.info(f"Plotting {relpath(path_src)} -> {relpath(path_dst)}")
@@ -284,6 +293,15 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
 
     alles = {'graph': graph, 'trips': trips, 'routes': routes}
 
+    # 3d plot
+
+    if do_3d:
+        with Section("Making 3d plot...", out=log.info):
+            with visualize3d(**alles) as fig:
+                fig.write_html(str(path_dst / f"visualize3d.html"))
+
+    # 2d plots
+
     ff = [
         excess_travel_time_traj,
         excess_travel_time_hist,
@@ -295,19 +313,17 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True):
         if skip_existing and out_fig.is_file():
             log.info(f"{relpath(out_fig)} exists, skipping.")
         else:
-            log.info(f"Making {relpath(out_fig)}...")
-            with f(**alles) as px:
-                px.f.savefig(out_fig)
-
-    # with visualize3d(**alles) as fig:
-    #     fig.write_html(str(out_dir / f"visualize3d.html"))
+            with Section(f"Making {relpath(out_fig)}", out=log.info):
+                with f(**alles) as px:
+                    px.f.savefig(out_fig)
 
 
 def main():
     path = unlist1(Path(__file__).with_suffix('').glob("sample_data"))
 
     for subcase in path.glob("*cases/*"):
-        plot_all(path_src=subcase, path_dst=mkdir(path / f"plots/{subcase.name}"), skip_existing=False)
+        assert subcase.is_dir()
+        plot_all(path_src=subcase, path_dst=mkdir(path / f"plots/{subcase.name}"), skip_existing=False, do_3d=True)
 
 
 if __name__ == '__main__':

@@ -34,11 +34,11 @@ def paths_of_route(route, graph, edge_ttt_weight):
         path.lag += (tb - max(path.lag))
 
         waiting_time = min(path.lag) - ta
-        if (waiting_time.total_seconds() < 5):
+        if (waiting_time.total_seconds() < -5):
             # presumed departure way before reported arrival at first node
             log.warning(
-                f"Transit {uv[0]} -> {uv[1]} is reported to start after {ta}"
-                f"but needs to start at {min(path.lag)} to arrive"
+                f"Transit {uv[0]} -> {uv[1]} is reported to start after {ta} "
+                f"but needs to start at {min(path.lag)} to arrive "
                 f"by the reported time {tb}."
             )
 

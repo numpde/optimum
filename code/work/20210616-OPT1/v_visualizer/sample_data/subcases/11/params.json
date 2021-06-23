@@ -1,4 +1,5 @@
 {
+  "plot": false,
   "data": {
     "table_names": [
       "green_tripdata_2016-05",
@@ -11,12 +12,18 @@
       40.75798,
       -73.9855
     ],
-    "focus_radius": 1000
+    "focus_radius": 1000,
+    "graph_h": 18
+  },
+  "data_post": {
+    "sample_trip_frac": 0.8,
+    "sample_trip_seed": 13,
+    "graph_ttt_factor": 1.4
   },
   "fleet": {
     "num_vehicles": 10,
     "cap_vehicles": 8,
-    "max_vehicle_waiting_time": "600.0"
+    "max_vehicle_waiting_time": "datetime.timedelta(seconds=600)"
   },
   "optimization": {
     "penalty_unserviced": 10000,
@@ -25,9 +32,9 @@
   },
   "search": {
     "first_solution_strategy": 4,
-    "solver_time_limit": 600.0,
+    "solver_time_limit": "datetime.timedelta(seconds=3600)",
     "solver_solution_limit": 1000,
-    "time_buffer": "600.0",
-    "time_horizon": "864000.0"
+    "time_buffer": "datetime.timedelta(seconds=600)",
+    "time_horizon": "datetime.timedelta(days=10)"
   }
 }

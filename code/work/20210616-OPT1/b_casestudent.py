@@ -18,15 +18,13 @@ from z_sources import EDGE_TTT_KEY, get_problem_data, preprocess_problem_data
 
 from ortools.constraint_solver.routing_enums_pb2 import FirstSolutionStrategy
 
-# InitGoogleLogging()
-
 from twig import log, LOG_FILE
 import logging
 
 log.parent.handlers[0].setLevel(logging.DEBUG)
 
 import contextlib
-from typing import List
+from typing import List, Iterable
 from pathlib import Path
 from datetime import timedelta, datetime
 from more_itertools import pairwise
@@ -365,7 +363,7 @@ def solve(problem: pd.Series, **params):
 
     log.info(f"Unserviced nodes: {unserviced}.")
 
-    def get_routes():
+    def get_routes() -> Iterable[pd.DataFrame]:
         for iv in range(manager.GetNumberOfVehicles()):
             def get_route_from(j):
                 while True:
@@ -385,7 +383,7 @@ def solve(problem: pd.Series, **params):
 
             yield route
 
-    routes = list(get_routes())
+    routes: List[pd.DataFrame] = list(get_routes())
 
     # [assignment.Value(dim_travel_time.SlackVar(i)) for i in demands[demands != 0].index]
     # [assignment.Value(dim_travel_time.SlackVar(manager.NodeToIndex(i))) for i in trips.ia]
@@ -417,6 +415,14 @@ def solve(problem: pd.Series, **params):
         ))
         for route in routes
     ]
+
+    # Sanity check
+
+    for (iv, route) in enumerate(routes):
+        waiting_time = pd.Series(route.est_time_dep - route.est_time_arr)
+        waiting_time = waiting_time[waiting_time < -timedelta(seconds=2)]
+        if len(waiting_time):
+            log.warning(f"Suspicious waiting times for route {iv}: {waiting_time.to_dict()}")
 
     # Infer pickups and deliveries
 
@@ -537,6 +543,10 @@ def get_default_params():
             'solver_solution_limit': 1000,
             'time_buffer': timedelta(minutes=10),
             'time_horizon': timedelta(days=10),
+        },
+
+        'meta': {
+            'version': 12,
         },
     }
 
