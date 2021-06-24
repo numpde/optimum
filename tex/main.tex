@@ -140,7 +140,7 @@ maxbibnames=100,
 \newcommand{\ra}[1]{{\color{Blue}#1}\marginnote{\TODO{review}}}
 
 
-\usepackage{tabto,calc}
+%\usepackage{tabto,calc}
 
 \title{%
 	%\vspace{-\baselineskip}[DRAFT]\\%
@@ -149,19 +149,18 @@ maxbibnames=100,
 		R. Andreev, 
 		On-demand public transport is making us mobile,
 		\the\year,
-		\tabto{\CurrentLineWidth}%
+		%\tabto{\CurrentLineWidth}%
 		%\href{https://bit.ly/optimum-2021}{\resizebox{\linewidth-\TabPrevPos}{!}{\texttt{http://bit.ly/optimum-2021}}}
 		\href{https://bit.ly/optimum-2021}{\texttt{http://bit.ly/optimum-2021}}
 	}
 }
 
 
-\newcommand{\linktodoc}{}
-
-
 \makeatletter
-\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{{\color{gray}\ref{#1}}}\@footnotemark}
 \makeatother
+
+\renewcommand\thefootnote{\textcolor{gray}{\arabic{footnote}}}
 
 
 % 
@@ -178,7 +177,7 @@ maxbibnames=100,
 \section{Introduction}
 
 The TLC trip record data%
-\footnote{\href{https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page}{\texttt{https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page}}}
+\footnote{\href{https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page}{\color{gray}\texttt{https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page}}}
 reports
 Yellow and Green taxi
 and other ``for-hire vehicle''
@@ -212,7 +211,7 @@ How many adaptively routed minibuses could meet the same demand?
 
 \section{Data preparation}
 
-\subsection{Taxi trips\footnote{\label{f:oldcode}The codes for this section were mostly written in 2019. }}
+\subsection{Taxi trips\footnote{\label{f:oldcode}\color{gray}The codes for this section were mostly written in 2019. }}
 
 \label{s:trips}
 
@@ -227,7 +226,7 @@ bear no useful details for our purpose.
 %
 %
 We keep only 
-the trips that begin and end in \href{https://www.openstreetmap.org/search?query=manhattan}{Manhattan}
+the trips that begin and end in \href{https://www.openstreetmap.org/search?query=manhattan}{\color{black}Manhattan}
 with
 reported trip distance between 0.1 and 30 miles.
 %
@@ -435,7 +434,7 @@ a so-called vehicle routing problem with these main attributes:
 %
 
 We use \texttt{ortools}%
-\footnote{\href{https://developers.google.com/optimization/routing/vrp}{https://developers.google.com/optimization/routing/vrp}}
+\footnote{\href{https://developers.google.com/optimization/routing/vrp}{\color{gray} \texttt{https://developers.google.com/optimization/routing/vrp}}}
 to find reasonable solutions computationally (on modest hardware).
 %
 The optimization objective is 
@@ -453,7 +452,7 @@ i.e.~%
 a few hundred passengers $\times$ \SI{1}{h} $\times$ a few square \si{km}.
 %
 We compare ``customer satisfaction''
-across fleet sizes and vehicle capacities.
+depending on vehicle capacities.
 
 
 
@@ -666,7 +665,7 @@ passengers convert excess travel time to dollars.
 %
 As a proxy for this, 
 we approximate the 2019 income%
-\footnote{\href{https://data.census.gov/cedsci/table?g=1600000US3651000&tid=ACSST5Y2019.S2001&hidePreview=true&moe=false}{https://data.census.gov/cedsci/table?g=1600000US3651000\&tid=ACSST5Y2019.S2001}}
+\footnote{\href{https://data.census.gov/cedsci/table?g=1600000US3651000&tid=ACSST5Y2019.S2001&hidePreview=true&moe=false}{\color{gray} \texttt{https://data.census.gov/cedsci/table?g=1600000US3651000\&tid=ACSST5Y2019.S2001}}}
 by
 the log-normal distribution with $\mu = 11$ and $\sigma = 0.7$
 (code \CODE{code/data/20210621-Income});
@@ -832,6 +831,8 @@ could be auctioned off in near-real time.
 \begin{center}
 \SHOWCODES
 \end{center}
+
+
 
 
 \SHOWTODOS
