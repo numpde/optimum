@@ -51,7 +51,11 @@ maxbibnames=100,
 
 % Paragraph spacing
 \usepackage{parskip}
+% https://tex.stackexchange.com/questions/10684/vertical-space-in-lists
 %\usepackage{enumitem}
+%\setlist{nosep} % or %\setlist{noitemsep} % to leave space around whole list
+
+
 
 % https://ostraya.livejournal.com/250833.html
 \usepackage{xspace}
@@ -69,6 +73,7 @@ maxbibnames=100,
 
 
 % http://www.texfaq.org/FAQ-ftnsect
+% https://tex.stackexchange.com/questions/152307/align-footnote-left
 \usepackage[stable]{footmisc}
 
 % https://tex.stackexchange.com/questions/20792/how-to-superimpose-latex-on-a-picture
@@ -135,19 +140,36 @@ maxbibnames=100,
 \newcommand{\ra}[1]{{\color{Blue}#1}\marginnote{\TODO{review}}}
 
 
+\usepackage{tabto,calc}
+
 \title{%
-	[DRAFT]\\%
-	On-demand public transport is making us mobile
+	%\vspace{-\baselineskip}[DRAFT]\\%
+	On-demand public transport is making us mobile%
+	\footnote{%
+		R. Andreev, 
+		On-demand public transport is making us mobile,
+		\the\year,
+		\tabto{\CurrentLineWidth}%
+		%\href{https://bit.ly/optimum-2021}{\resizebox{\linewidth-\TabPrevPos}{!}{\texttt{http://bit.ly/optimum-2021}}}
+		\href{https://bit.ly/optimum-2021}{\texttt{http://bit.ly/optimum-2021}}
+	}
 }
-\author{RA}
-\date{\today}
-\newcommand{\linktodoc}{http://bit.ly/}
+
+
+\newcommand{\linktodoc}{}
 
 
 \makeatletter
 \newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
 \makeatother
 
+
+% 
+\usepackage{titling}
+%\predate{}
+%\postdate{}
+
+\date{\today}\author{R.~Andreev}
 
 \begin{document}
 
@@ -157,38 +179,32 @@ maxbibnames=100,
 
 The TLC trip record data%
 \footnote{\href{https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page}{\texttt{https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page}}}
-records 
+reports
 Yellow and Green taxi
 and other ``for-hire vehicle''
 trips 
 in New York City.
 %
-In the earlier years in particular,
+In the earlier years,
 Yellow and Green taxi records
-contain timestamps,
-trip distance, 
+contain time,
+distance, 
 passenger count,
 fare, etc.,
-but also
-approximate locations of pickup and dropoff.
+but also location of pickup and dropoff.
 %
 %
-Based on those data
-we give a partial answer to the question
+Based on those data we attempt to answer:
 \begin{quote}
-	How many adaptively routed minibuses could service the same demand?
+How many adaptively routed minibuses could meet the same demand?
 \end{quote}
 
 %
 
-
+% The number in the margin refers to the corresponding code listed in \S\ref{s:code}.
 
 %
 
-Conventions.
-%
-%
-The number in the margin refers to the corresponding code listed in \S\ref{s:code}.
 
 
 %Abbreviations.
@@ -196,7 +212,7 @@ The number in the margin refers to the corresponding code listed in \S\ref{s:cod
 
 \section{Data preparation}
 
-\subsection{Taxi trips\footnote{\label{f:oldcode}The codes for this section were mostly written in 2019.}}
+\subsection{Taxi trips\footnote{\label{f:oldcode}The codes for this section were mostly written in 2019. }}
 
 \label{s:trips}
 
@@ -218,7 +234,14 @@ reported trip distance between 0.1 and 30 miles.
 We filter out records that
 lack geo-coordinates.
 %
-\marginnote{\CODE{code/data/20210610-NYCTLC/a_download.py}}
+\marginnote{%
+	{\ }
+	\\
+	\vspace{-2\baselineskip}
+	{\color{gray}code}
+	\\
+	\CODE{code/data/20210610-NYCTLC/a_download.py} 
+}
 %
 See Fig.~\ref{f:nyctlc} for a net summary.
 %
@@ -274,7 +297,7 @@ We obtained the road network for Manhattan
 \marginnote{\CODE{code/data/20210611-OSM/a_osm_download.py}}%
 from the OpenStreetMap Overpass API
 %\footnote{\href{https://wiki.openstreetmap.org/wiki/Overpass_API}{\texttt{https://wiki.openstreetmap.org/wiki/Overpass_API}}}
-and filtered for roads that can plausibly sustain public traffic.
+and filtered for roads plausibly open for public traffic.
 %
 \marginnote{\CODE{code/data/20210611-OSM/c_road_graph.py}}
 %
@@ -288,9 +311,9 @@ Edges are broken into bits under \SI{20}{m}.
 %
 %
 When modeling individual trips,
-their reported pickup and dropoff locations
-are snapped to the nearest node of the road graph;
-we ignore about 10\% of the trips 
+their reported endpoints
+are snapped to the nearest grpah node;
+we ignore $\sim$10\% of records
 where the discrepancy is over \SI{20}{m}.
 %
 %
@@ -305,14 +328,13 @@ The map graphics are from MapBox.
 
 The trip trajectories are not available,
 only the pickup and dropoff locations
-(with potential GPS uncertainty of 10 to \SI{100}{m}).
+(with uncertainty of 10 to \SI{100}{m}).
 %
 %
-We leverage the reported trip duration to
-infer plausible mean-field travel speeds
+Leveraging the reported trip duration 
+we infer plausible mean-field travel speeds
 (see Fig.~\ref{f:mfv})
-throughout the road graph
-iteratively as follows.
+throughout the road graph as follows.
 %
 The speeds on all roads are initialized to \SI{5}{m/s}.
 %
@@ -384,7 +406,7 @@ a so-called vehicle routing problem with these main attributes:
 \item
 	Capacitated.
 	%
-	There are $N$ buses of maximal capacity of $C$ passengers each.
+	There are $N$ vehicles of maximal capacity of $C$ passengers each.
 \item
 	Time windows.
 	%
@@ -393,19 +415,18 @@ a so-called vehicle routing problem with these main attributes:
 	of
 	the recorded pickup time in the trip data (\S\ref{s:trips}).
 	%
-	The dropoff time window extends to $\SI{10}{min}$
-	after the recorded dropoff.
+	Dropoff is accepted until $\SI{10}{min}$
+	after the recorded dropoff time.
 	%
-	To ensure feasibility,
-	a passenger may be ignored 
-	at a certain penalty to the optimization objective.	
+	Ignoring a request incurs
+	a penalty to the optimization objective.	
 	%
-	The buses are allowed to wait up to $\SI{10}{min}$
+	The vehicles may wait up to $\SI{10}{min}$
 	at any location.
 \item
 	Depot.
 	%
-	All buses start and finish at a certain location
+	All vehicles start and finish at a certain location
 	but have enough time to reach anywhere
 	without compromising feasibility.
 %	(hence this is not very important).
@@ -417,12 +438,12 @@ We use \texttt{ortools}%
 \footnote{\href{https://developers.google.com/optimization/routing/vrp}{https://developers.google.com/optimization/routing/vrp}}
 to find reasonable solutions computationally (on modest hardware).
 %
+The optimization objective is 
+the total vehicle travel time,
+plus about $\SI{3}{h}$ for each unserviced request.
+%
 We can roughly assess optimality
 by allotting more time to the solver.
-%
-
-\TODO{what is the cost}
-\TODO{initial solution}
 
 %
 
@@ -431,20 +452,9 @@ the trip data at a time,
 i.e.~%
 a few hundred passengers $\times$ \SI{1}{h} $\times$ a few square \si{km}.
 %
-We then compare ``customer satisfaction''
-across different fleet sizes $N$ and bus capacities $C$.
+We compare ``customer satisfaction''
+across fleet sizes and vehicle capacities.
 
-%
-
-We pretend here that the demand
-and the traffic conditions
-are known in advance,
-whereas some \SI{10}{min} in advance
-would be more realistic.
-%
-Meanwhile, the density of requests in space and time is quite high.
-%
-Thus, we believe our results remain informative.
 
 
 \section[Case study]{Case study \marginpar{\smash{\CODE{code/work/20210616-OPT1}}}} \label{s:case}
@@ -465,7 +475,8 @@ within
 %
 %	
 Allowing $n = 400$ requests
-is already a little difficult to solve ($\sim$\SI{1}{h} $\times$ \SI{2}{Gflop/s}),
+is already a little difficult 
+to optimize (over \SI{1}{h} $\times$ \SI{2}{Gflop/s}),
 so we focus here on
 \begin{quote}
 	$n = 100$ requests
@@ -479,10 +490,10 @@ so we focus here on
 
 The traffic model from \S\ref{s:traffic} predicts trip times
 near Times Square well for 6-7 am
-but is too optimistic for 6-7 pm;
+but is too optimistic for 6-7 pm 
+(code \CODE{code/model/20210613-GraphWithLag/c_triptime_times_square});
 we use it here nevertheless.
 %
-\marginnote{\CODE{code/model/20210613-GraphWithLag/c_triptime_times_square}}
 \edef\codetriptime{\thecodeindex}
 
 %
@@ -509,18 +520,16 @@ when operating over an extended period.
 
 In summary,
 we estimate that this demand can be serviced by 
-\begin{itemize}
-\item 
+%\begin{itemize}
+%\item 
 	$N \approx 20$ single-passenger taxis; or
-\item
-	$N \approx 10$ minibuses of capacity $C \approx 8$,
+%\item
+	$N \approx 10$ minibuses of capacity $C \approx 8$
 	if some excess travel time is tolerated.
-\end{itemize}
+%\end{itemize}
 
 %
 
-
-\TODO{more on this?}
 
 \begin{figure}[!p]
 	\begin{subfigure}{0.5\textwidth}
@@ -604,7 +613,7 @@ we estimate that this demand can be serviced by
 \subsection{Game-theoretic spin} \label{s:game1}
 
 Consider a passenger
-(ignoring groups)
+(no groups)
 who chooses between: 
 (A) a single-passenger taxi at cost $A$ that takes the quickest route,
 or
@@ -618,13 +627,10 @@ or
 %
 %
 %
-The costs are assumed fixed,
-since the trips in \S\ref{s:case1} are relatively short.
-%
-%
-The taxi fare is $A \approx \SI{6}{\$}$ for short trips 
-(code \CODE{code/data/20210610-NYCTLC/e_explore/trip_fare_vs_distance}).
-
+The costs are assumed fixed
+($A = \SI{6}{\$}$, cf.~%
+code \CODE{code/data/20210610-NYCTLC/e_explore/trip_fare_vs_distance})
+since the trips in \S\ref{s:case1} are short.
 
 %
 
@@ -650,17 +656,20 @@ and split them randomly into $a$ that take (A) and $b$ that take (B).
 %
 For simplicity,
 we keep the minibus fleet at $N = 10$ regardless of $a/b$.
+%
+Some of (B) remain unserviced by the minibus fleet and count as (A).
 
 %
 
 We assume
 passengers convert excess travel time to dollars.
 %
-As a proxy for this, we start with the 2019 income census%
-\footnote{\href{https://data.census.gov/cedsci/table?g=1600000US3651000&tid=ACSST5Y2019.S2001&hidePreview=true&moe=false}{https://data.census.gov/cedsci/table?g=1600000US3651000\&tid=ACSST5Y2019.S2001}},
-to which
-the log-normal distribution with $\mu = 11$ and $\sigma = 0.7$ fits reasonably well
-(see \CODE{code/data/20210621-Income});
+As a proxy for this, 
+we approximate the 2019 income%
+\footnote{\href{https://data.census.gov/cedsci/table?g=1600000US3651000&tid=ACSST5Y2019.S2001&hidePreview=true&moe=false}{https://data.census.gov/cedsci/table?g=1600000US3651000\&tid=ACSST5Y2019.S2001}}
+by
+the log-normal distribution with $\mu = 11$ and $\sigma = 0.7$
+(code \CODE{code/data/20210621-Income});
 %
 a passenger's income is drawn from this log-normal;
 %
@@ -688,38 +697,123 @@ of those who actually prefer (A) to those who prefer (B).
 %indicates
 %whether (A) or (B) should increase 
 %starting from the condition $a / b$.
+
 %
-%
-The results (Fig.~\ref{f:game1})
-indicate that 
+
+This model predicts these equilibria (Fig.~\ref{f:game1}):
 \begin{itemize}
 \item 
-	50-60\% prefer taking the minibus if $A - B = \SI{3}{\$}$; and
+	\textbf{50-60\%} would take the minibus if $A = B + \SI{3}{\$}$; and
 \item
-	80-90\% prefer taking the minibus if $A - B = \SI{6}{\$}$.
+	\textbf{80-90\%} if $A = B + \SI{6}{\$}$.
 \end{itemize}
 
 \begin{figure}
 \centering
-\includegraphics[width=0.5\textwidth]{20210616-OPT1/c_grid_study1/UTC-20210621-232339/e_evo_plots/evo}
+
+\begin{subfigure}{0.32\textwidth}
+	\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study1b/UTC-20210623-191629/e_evo_plots/evo__graph_h=6__graph_ttt_factor=3}
+	
+	\caption{Bad traffic conditions.}
+	\label{f:game1-bad}
+\end{subfigure}
+%
+\hfill
+%
+\begin{subfigure}{0.32\textwidth}
+	\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study1/UTC-20210621-232339/e_evo_plots/evo}
+	
+	\caption{Traffic depends on $a/b$.}
+	\label{f:game1}
+\end{subfigure}
+%
+\hfill
+%
+\begin{subfigure}{0.32\textwidth}
+	\includegraphics[width=\textwidth]{20210616-OPT1/c_grid_study1b/UTC-20210623-191629/e_evo_plots/evo__graph_h=6__graph_ttt_factor=1}
+	
+	\caption{Good traffic conditions.}
+	\label{f:game1-good}
+\end{subfigure}
 
 \caption{%
 	Results of \S\ref{s:game1}.
+	%
+	Faint: the imposed fraction of minibus takers;
+	solid: effective fraction without the unserviced minibus requests.
 }
-\label{f:game1}
-\protect\TODO{caption}
 \end{figure}
 
 
-\TODO{code refs}
 
 
 
 \section{Conclusions}
 
+We asked whether taxis could be 
+replaced
+by a smaller fleet of adaptively routed minibuses.
+%
+%
+In bad traffic conditions
+the minibuses do not circulate quickly enough 
+(Fig.~\ref{f:game1-bad}).
+%
+%
+However,
+if we extrapolate ``taxi'' to include
+other point-to-point rides,
+including Uber/Lyft,
+and postulate that this will improve traffic 
+(from \SI{6}{pm} closer to that of \SI{6}{am}),
+our model predicts
+that,
+depending on the cost differential,
+50\% to 90\% of trips could be covered by
+the minibus fleet (Fig.~\ref{f:game1}).
+%
+This seems plausible,
+given the relative success of ride pooling/sharing
+UberPool and Lyft Line
+(typically no more than 3 concurrent passengers).
+%
+%
+Of course, better traffic conditions might 
+invite additional traffic,
+spoiling the effect.
 
 
-\TODO{drop the mic}
+%
+
+We pretended here that the demand
+and the traffic conditions
+are known in advance,
+whereas some \SI{10}{min} in advance
+would be more realistic.
+%
+Meanwhile, the density of requests in space and time is quite high.
+%
+Thus, we believe the results remain informative.
+
+%
+
+Tradeoffs other than travel time 
+might influence the demand,
+such as crowd-aversion
+and 
+the flexibility with pickup and dropoff times.
+%
+%
+These could be modeled as willingness-to-pay profiles
+(set up by the customer or inferred by the provider);
+or perhaps 
+different travel standards 
+that depend on the current traffic
+could be auctioned off in near-real time.
+
+%
+
+
 
 
 %%% BIBLIOGRAPHY %%%
@@ -740,7 +834,6 @@ indicate that
 \end{center}
 
 
-\subsection{TODOs} 
 \SHOWTODOS
 
 

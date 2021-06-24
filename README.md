@@ -3,7 +3,7 @@
 Continue to the [report](tex/main.pdf).
 
 Cite as:
-RA, optimum -- on-demand public transportation is making us mobile,
+R. Andreev, 
+On-demand public transportation is making us mobile,
+2021,
 [http://bit.ly/optimum-2021](http://bit.ly/optimum-2021).
-
-RA, 2021-06
