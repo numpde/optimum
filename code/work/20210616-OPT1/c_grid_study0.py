@@ -1,9 +1,10 @@
 # 2021-06-18
 
-import contextlib
-import shutil
+"""
+Compare C=1 vs C=8.
+"""
 
-from twig import log
+import shutil
 
 from pathlib import Path
 

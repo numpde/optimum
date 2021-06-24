@@ -1,9 +1,11 @@
 # 2021-06-18
 
-import contextlib
-import shutil
+"""
+The road permittivity improves (by definition) with
+the percentage of bus takers.
+"""
 
-from twig import log
+import shutil
 
 from pathlib import Path
 

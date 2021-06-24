@@ -13,26 +13,36 @@ from tcga.utils import mkdir, relpath
 
 style = {
     rcParam.Text.usetex: True,
-    rcParam.Font.size: 16,
+    rcParam.Font.size: 20,
     rcParam.Legend.framealpha: 0.5,
 }
 
+
 @contextlib.contextmanager
 def plot_evo(grid: pd.DataFrame) -> Plox:
+    if not {'A', 'B'}.issubset(grid):
+        log.warning(f"Columns `A` and `B` not found -- skipping.")
+        yield None
+        return
+
     with Plox(style) as px:
         for (n, ((A, B), grid)) in enumerate(grid.groupby(by=['A', 'B'])):
             c = ["green", "darkblue", "darkorange", "darkred"][n]
+            s = ["o", "s", "o", "s"][n]
 
-            px.a.plot(np.nan, np.nan, '.',  c=c, ms=14, label=f"A = {A}\,\$, B = {B}\,\$")
+            px.a.plot(np.nan, np.nan, s, c=c, ms=12, label=f"A = {A}\,\$, B = {B}\,\$")
 
             for (i, run) in grid.iterrows():
-                b_frac = run['bustakers_fraction'] * (1 - run['unserviced'] / run['num_trips'])
-                b_bar = run['b_bar']
-
-                px.a.plot(b_frac * 100, b_bar * 100, '.', c=c, ms=16, alpha=0.8, mec='none')
+                b0 = run['bustakers_fraction'] * 100
+                b1 = b0 * (1 - run['unserviced'] / run['num_trips'])
+                b_bar = run['b_bar'] * 100
+                px.a.plot(b0, b_bar, s, c=c, ms=10, alpha=0.2, mec='none')
+                px.a.plot(b1, b_bar, s, c=c, ms=10, alpha=0.7, mec='none')
+                px.a.plot([b0, b1], [b_bar, b_bar], '-', c=c, lw=0.5, alpha=0.1)
 
         (xlim, ylim) = (px.a.get_xlim(), px.a.get_ylim())
-        a = int(10 ** np.floor(np.log10(min(min(xlim), min(ylim)))))
+        # a = (10 * int(min(min(xlim), min(ylim)) / 10))
+        a = 10
         px.a.plot((a, 100), (a, 100), '--', lw=1, c='k', alpha=0.9)
 
         px.a.set_xticks(np.arange(a, 101)[0::10])
@@ -45,7 +55,7 @@ def plot_evo(grid: pd.DataFrame) -> Plox:
 
         px.a.legend(loc='lower right')
 
-        px.a.set_xlabel("Take the minibus (imposed)")
+        px.a.set_xlabel("Take the minibus")
         px.a.set_ylabel("Prefer the minibus")
 
         yield px
@@ -62,12 +72,19 @@ def main():
             if "UTC-20210621-232339" in [p.name for p in grid_file.parents]:
                 grid = grid[~grid.param_set.isin([16])]
 
-            with plot_evo(grid) as px:
-                px.f.savefig(mkdir(grid_file.parent.parent / Path(__file__).stem) / "evo.png")
+            if "c_grid_study1" in [p.name for p in grid_file.parents]:
+                split = []
+            else:
+                split = sorted({'graph_h', 'graph_ttt_factor'}.intersection(grid.columns))
 
-            log.info(f"Success on {relpath(grid_file)}.")
+            for (key, df) in (grid.groupby(by=split) if split else [([], grid)]):
+                stem = "__".join(["evo"] + [f"{k}={v}" for (k, v) in zip(split, key if isinstance(key, tuple) else [key])])
+                with plot_evo(df) as px:
+                    px.f.savefig(mkdir(grid_file.parent.parent / Path(__file__).stem) / f"{stem}.png")
         except:
             log.exception(f"Failed on {relpath(grid_file)}.")
+        else:
+            log.info(f"Success on {relpath(grid_file)}.")
 
 
 if __name__ == '__main__':

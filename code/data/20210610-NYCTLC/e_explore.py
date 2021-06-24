@@ -55,7 +55,7 @@ def trip_distance_histogram(table_name):
     trip_distance *= (1e-3)
 
     with Plox({**default_style, rcParam.Figure.figsize: (8, 3)}) as px:
-        trip_distance.hist(ax=px.a, label=f"{table_name}", color=name2color(table_name))
+        trip_distance.hist(ax=px.a, label=f"{table_name}", color=name2color(table_name), edgecolor="white")
         px.a.set_yscale('log')
         px.a.set_xlabel('Trip distance, km')
         px.a.set_ylabel('Number of trips')
@@ -431,10 +431,10 @@ def trip_duration_vs_distance2(table_name):
 
 if __name__ == '__main__':
     ff = [
-        trip_fare_vs_distance,
+        # trip_fare_vs_distance,
         # trip_speeds_times_square,
         # trip_duration_vs_distance2,
-        # trip_distance_histogram,
+        trip_distance_histogram,
         # trip_trajectories_initial,
         # pickup_hour_heatmap,
         # trip_speed_histogram,

@@ -226,7 +226,7 @@ def excess_travel_time_hist(graph: nx.DiGraph, trips: pd.DataFrame, routes: pd.D
         data = (new - old) / 60
 
         m = 15
-        px.a.hist(data, bins=m, range=[0, 15], color="C0")
+        px.a.hist(data, bins=m, range=[0, 15], color="C0", edgecolor="white", lw=2)
         px.a.set_xlabel("Excess travel time, min")
         px.a.set_ylabel("Number of passengers")
         # px.a.set_yticklabels(px.a.get_yticklabels(), fontsize="small")
@@ -285,6 +285,11 @@ def plot_all(path_src: Path, path_dst=None, skip_existing=True, do_3d=False):
 
     if not set(trips.index).issubset(set(problem_data.trips.index)):
         log.warning(f"`problem_data.trips` does not contain the trips from `trips.tsv`")
+
+    if 'data_post' not in params:
+        log.warning(f"Imputing `data_post` from the default.")
+        from b_casestudent import get_default_params
+        params['data_post'] = get_default_params()['data_post']
 
     problem_data = preprocess_problem_data(problem_data, **params['data_post'])
     problem_data.trips = None

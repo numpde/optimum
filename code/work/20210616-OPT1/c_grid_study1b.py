@@ -1,7 +1,8 @@
 # 2021-06-18
 
 """
-Like c_grid_study1 but fixing the velocity scaling of the graph (`graph_ttt_factor`).
+Like c_grid_study1 but fixing the road permittivity,
+i.e. the velocity scaling of the graph (`graph_ttt_factor`).
 """
 
 import contextlib
