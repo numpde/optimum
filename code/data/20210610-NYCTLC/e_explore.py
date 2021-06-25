@@ -45,6 +45,17 @@ def QUERY(sql) -> pd.DataFrame:
         return pd.read_sql_query(sql, con, parse_dates=['ta', 'tb'])
 
 
+def trip_table(table_name):
+    sql = f"SELECT ta as pickup, tb as dropoff, xa_lat, xa_lon, xb_lat, xb_lon, passenger_count as n, distance as meters, duration as seconds, total_amount as [$] FROM [{table_name}] ORDER BY pickup LIMIT 7"
+    df = QUERY(sql)
+    df.meters = np.round(df.meters).astype(int)
+    df.seconds = np.round(df.seconds).astype(int)
+    df.iloc[-1, 1:] = ""
+    df.iloc[-1, 0] = "..."
+    with (mkdir(out_dir / f"{whatsmyname()}") / f"{table_name}.tex").open(mode='w') as fd:
+        print(df.to_latex(index=False, na_rep=""), file=fd)
+
+
 def trip_distance_histogram(table_name):
     sql = f"SELECT [distance] FROM [{table_name}]"
     trip_distance = QUERY(sql).squeeze()
@@ -431,10 +442,11 @@ def trip_duration_vs_distance2(table_name):
 
 if __name__ == '__main__':
     ff = [
+        trip_table,
         # trip_fare_vs_distance,
         # trip_speeds_times_square,
         # trip_duration_vs_distance2,
-        trip_distance_histogram,
+        # trip_distance_histogram,
         # trip_trajectories_initial,
         # pickup_hour_heatmap,
         # trip_speed_histogram,
