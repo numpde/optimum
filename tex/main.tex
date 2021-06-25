@@ -505,7 +505,7 @@ see Fig.~\ref{f:case1-hist}.
 %
 %
 The results for $\SI{2}{km}$ radius with $N = 20$ 
-vehicles are similar (see code \#\codecaseone\xspace to browse the results).
+vehicles are similar (see code \codereref{\codecaseone} to browse the results).
 
 %
 
@@ -636,7 +636,10 @@ since the trips in \S\ref{s:case1} are short.
 Between 6-7 am and 6-7 pm,
 the number of requests doubles (Fig.~\ref{f:nyctlc-pickup})
 while trip speeds near Times Square are nearly 3$\times$ lower
-(code \#\codetriptime\xspace and \CODE{code/data/20210610-NYCTLC/e_explore/trip_speeds_times_square}).
+(code \codereref{\codetriptime} and \CODE{code/data/20210610-NYCTLC/e_explore/trip_speeds_times_square}).
+%
+
+%\csname code\expandafter\romannumeral\codetriptime\endcsname
 %
 %
 We postulate a causal link and
@@ -672,9 +675,7 @@ the log-normal distribution with $\mu = 11$ and $\sigma = 0.7$
 %
 a passenger's income is drawn from this log-normal;
 %
-division by $52 \times 5 \times 8 \si{h}$ gives their hour-to-dollar conversion factor $c$.
-%
-\marginnote{\CODE{code/work/20210616-OPT1/d_postprocess.py}}
+division by $52 \times 5 \times 8 \si{h}$ gives their hour-to-dollar conversion factor $c$ (code \CODE{code/work/20210616-OPT1/d_postprocess_paramgrid.py}).
 
 %
 

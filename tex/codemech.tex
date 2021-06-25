@@ -16,12 +16,19 @@
 	\expandafter\gdef\csname code\roman{codeindex}\endcsname{#1}%
 	\label{codelabel\roman{codeindex}}%
 }
+%
+\newcommand{\codereref}[1]{%
+\href{\codeprefix\csname code\expandafter\romannumeral#1\endcsname}{%
+\color{gray}\##1}}
+%
 \renewcommand\CODE[1]{%
 	{%
-		\ADDCODE{\href{\codeprefix#1}{\texttt{#1}}}%
+		%\ADDCODE{\href{\codeprefix#1}{\texttt{#1}}}%
+		\ADDCODE{#1}%
 		{\href{\codeprefix#1}{\color{gray}\#\arabic{codeindex}}}%
 	}%
 }
+%
 \newcount\fooo
 \newcounter{indexcode}
 \long\def\addto#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
@@ -33,7 +40,7 @@
 			\addtocounter{indexcode}{1}%
 			\#\arabic{indexcode} &
 			p.\pageref{codelabel\roman{indexcode}} &
-			\csname code\roman{indexcode}\endcsname \\ 
+			\href{\codeprefix\csname code\roman{indexcode}\endcsname}{\texttt{\csname code\roman{indexcode}\endcsname}} \\ 
 		}
 	\ifnum \fooo < \thecodeindex
 	\repeat
