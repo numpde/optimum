@@ -1,6 +1,10 @@
 # optimum
 
-Continue to the [report](tex/main.pdf).
+- [Report](tex/main.pdf)
+
+- [Slides](slides/slides.pdf)
+
+
 
 Cite as:
 R. Andreev, 
