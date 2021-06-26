@@ -30,7 +30,8 @@ def attach_links(src_dir: Path, grid: pd.DataFrame):
                         ", ".join([
                             f"<a href='{f}'>{Path(f).stem}</a>"
                             for f in
-                            [str(f.resolve().relative_to(src_dir)) for f in sorted(src_dir.glob(f"*cases/{i}/*.*"))]
+                            [str(f.resolve().relative_to(src_dir)) for f in sorted(src_dir.glob(f"*cases/{i}/*.*"))] +
+                            [str(f.resolve().relative_to(src_dir)) for f in sorted(src_dir.glob(f"*/{i}/*.html"))]
                         ])
                 )
             }

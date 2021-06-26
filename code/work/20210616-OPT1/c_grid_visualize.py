@@ -38,10 +38,17 @@ def main():
         with Section(f"Writing plots for {relpath(param_grid_file)}", out=log.info):
             try:
                 for (i, row) in grid.iterrows():
+                    do_3d = False
+
+                    # unless..
+                    if ("UTC-20210619-074952" == str(param_grid_file.parent.name)) and (str(i) in {"8", "9"}):
+                        do_3d = True
+
                     log.info(f"{i}: {dict(row)}")
                     plot_all(
                         path_src=unlist1(param_grid_file.parent.glob(f"*cases/{i}")),
                         path_dst=mkdir(param_grid_file.parent / f"{Path(__file__).stem}/{i}"),
+                        do_3d=do_3d
                     )
             except:
                 log.exception(f"Some plots failed. Continuing...")
