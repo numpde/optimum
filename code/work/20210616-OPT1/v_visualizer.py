@@ -134,6 +134,13 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kw):
     t0 = min(routes.est_time_arr)
     ztime = (lambda v: (pd.Series(v) - t0).dt.total_seconds())
 
+    from matplotlib.cm import get_cmap as mpl_cmap
+    from matplotlib.colors import to_hex
+    route_color = {
+        iv: to_hex((mpl_cmap("rainbow"))(n / len(set(routes.iv))))
+        for (n, iv) in enumerate(sorted(set(routes.iv)))
+    }
+
     for (i, trip) in trips.iterrows():
         # color = rng.choice(px.colors.sequential.Plasma)
 
@@ -164,14 +171,14 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kw):
         )
 
         # Connect
-        if not pd.isna(trip.iv_ta) and not pd.isna(trip.iv_ta):
+        if not pd.isna(trip.iv_ta):
             fig.add_trace(
                 go.Scatter3d(
                     x=[trip.xa_lon, trip.xb_lon],
                     y=[trip.xa_lat, trip.xb_lat],
                     z=ztime([trip.iv_ta, trip.iv_tb]),
                     # marker=dict(size=0),
-                    line=dict(width=0.8, color="blue", dash="dash"),
+                    line=dict(width=0.8, color=route_color[trip.iv], dash="dash"),
                     mode="lines",
                     showlegend=False,
                 ),
@@ -181,9 +188,7 @@ def visualize3d(graph, trips, routes: pd.DataFrame, **kw):
         if max(route.load) == 0:
             continue
 
-        from matplotlib.cm import get_cmap as mpl_cmap
-        from matplotlib.colors import to_hex
-        color = to_hex((mpl_cmap("rainbow"))(n / len(set(routes.iv))))
+        color = route_color[iv]
 
         # import plotly.express
         # color = plotly.express.colors.qualitative.Dark24[n]
