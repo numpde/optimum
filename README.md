@@ -15,4 +15,4 @@ Cite as:
 R. Andreev, 
 On-demand public transportation is making us mobile,
 2021,
-[http://bit.ly/optimum-2021](http://bit.ly/optimum-2021).
+[https://numpde.github.io/optimum/](https://numpde.github.io/optimum/).
