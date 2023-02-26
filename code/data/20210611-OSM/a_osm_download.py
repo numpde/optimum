@@ -16,7 +16,7 @@ PARAM = {
     # Note: check http://overpass-api.de/api/status
 
     'queries': {
-        'manhattan': unlist1(BASE.parent.glob("**/manhattan.ql")).open(mode='r').read(),
+        'manhattan': unlist1(BASE.parent.glob("**/manhattan.overpassql")).open(mode='r').read(),
     },
 
     'zipped_name': "data.json",
