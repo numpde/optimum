@@ -13,4 +13,3 @@ Overpass query `manhattan.ql` was composed using
  - [OSM relation info](https://www.openstreetmap.org/relation/8398124).
  - [Overpass QL reference](https://wiki.openstreetmap.org/wiki/Overpass_API/Overpass_QL).
  - [Overpass turbo](https://overpass-turbo.eu) for preview and autorepair.
- 
